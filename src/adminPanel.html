@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      background-color: #F5F7FB;
+    }
+    
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar styles */
+    .sidebar {
+      width: 250px;
+      background-color: #1A1F2C;
+      color: white;
+      position: fixed;
+      height: 100vh;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+    
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .menu-item.active {
+      background-color: #4C6FFF;
+    }
+    
+    .menu-item i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    .user-info {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      padding: 15px 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #4C6FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+    
+    /* Main content area */
+    .main-content {
+      margin-left: 250px;
+      padding: 25px;
+      width: calc(100% - 250px);
+      transition: all 0.3s;
+    }
+    
+    .page-header {
+      margin-bottom: 25px;
+    }
+    
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .page-header p {
+      color: #6c757d;
+    }
+    
+    /* Card styles */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 25px;
+    }
+    
+    .card-header {
+      padding: 20px;
+      border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .card-header h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .card-description {
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Table styles */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .table th, .table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #f1f1f1;
+    }
+    
+    .table th {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    /* Badge styles */
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .badge-success {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: #10B981;
+    }
+    
+    .badge-warning {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: #F59E0B;
+    }
+    
+    .badge-danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+    
+    /* Button styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: #4C6FFF;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3a5de5;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #d1d5db;
+    }
+    
+    .btn-outline:hover {
+      background-color: #f9fafb;
+    }
+    
+    .btn-success {
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .btn-success:hover {
+      background-color: rgba(16, 185, 129, 0.1);
+    }
+    
+    .btn-danger {
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .btn-danger:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+    
+    .btn-icon {
+      padding: 8px;
+      border-radius: 6px;
+    }
+    
+    /* Form styles */
+    .input-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .input-group i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+    }
+    
+    .input {
+      width: 100%;
+      padding: 10px 15px;
+      padding-left: 35px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    
+    /* Tabs styles */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #f1f1f1;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+    
+    .tab.active {
+      border-bottom-color: #4C6FFF;
+      color: #4C6FFF;
+    }
+    
+    /* Charts container */
+    .chart-container {
+      height: 300px;
+      position: relative;
+    }
+    
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .stat-change {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+    }
+    
+    .stat-change.positive {
+      color: #10B981;
+    }
+    
+    .stat-change.negative {
+      color: #EF4444;
+    }
+    
+    /* Action buttons container */
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s;
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .toast-success {
+      border-left: 4px solid #10B981;
+    }
+    
+    .toast-error {
+      border-left: 4px solid #EF4444;
+    }
+    
+    .toast-icon {
+      margin-right: 12px;
+      font-size: 20px;
+    }
+    
+    .toast-success .toast-icon {
+      color: #10B981;
+    }
+    
+    .toast-error .toast-icon {
+      color: #EF4444;
+    }
+    
+    .toast-content h4 {
+      margin-bottom: 2px;
+      font-size: 16px;
+    }
+    
+    .toast-content p {
+      color: #6c757d;
+      font-size: 14px;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 991px) {
+      .sidebar {
+        width: 70px;
+        transform: translateX(0);
+      }
+      
+      .sidebar-header span,
+      .menu-item span,
+      .user-info span {
+        display: none;
+      }
+      
+      .menu-item i {
+        margin-right: 0;
+      }
+      
+      .user-info {
+        justify-content: center;
+      }
+      
+      .main-content {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+      }
+      
+      .mobile-menu-toggle {
+        display: block;
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+        width: 250px;
+      }
+      
+      .sidebar.active .sidebar-header span,
+      .sidebar.active .menu-item span,
+      .sidebar.active .user-info span {
+        display: inline-block;
+      }
+      
+      .sidebar.active .menu-item i {
+        margin-right: 10px;
+      }
+      
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+      
+      .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 110;
+        background-color: #1A1F2C;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+</head>
+<body>
+  <div class="mobile-menu-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </div>
+  
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span>Admin Panel</span>
+        <i class="fas fa-bars"></i>
+      </div>
+      
+      <div class="sidebar-menu">
+        <div class="menu-item" data-section="users" onclick="showSection('users')">
+          <i class="fas fa-users"></i>
+          <span>User Management</span>
+        </div>
+        <div class="menu-item" data-section="moderation" onclick="showSection('moderation')">
+          <i class="fas fa-shield-alt"></i>
+          <span>Content Moderation</span>
+        </div>
+        <div class="menu-item" data-section="analytics" onclick="showSection('analytics')">
+          <i class="fas fa-chart-bar"></i>
+          <span>Analytics</span>
+        </div>
+        <div class="menu-item" data-section="reports" onclick="showSection('reports')">
+          <i class="fas fa-file-alt"></i>
+          <span>Reports</span>
+        </div>
+        <div class="menu-item" data-section="settings" onclick="showSection('settings')">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </div>
+      </div>
+      
+      <div class="user-info">
+        <div class="user-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>
+          <span style="font-weight: 600;">Admin User</span>
+          <div style="font-size: 12px; color: #ccc;">admin@example.com</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <!-- User Management Section -->
+      <div class="section" id="users-section">
+        <div class="page-header">
+          <h1>User Management</h1>
+          <p>Manage, approve, and block users.</p>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div class="input-group" style="width: 300px; margin-bottom: 0;">
+            <i class="fas fa-search"></i>
+            <input type="text" class="input" placeholder="Search users..." id="user-search">
+          </div>
+          
+          <button class="btn btn-primary">
+            <i class="fas fa-user-plus" style="margin-right: 8px;"></i> Add User
+          </button>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>Users</h2>
+            <div class="card-description">A list of all users in your organization.</div>
+          </div>
+          <div class="card-body">
+            <table class="table" id="users-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Role</th>
+                  <th>Join Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Users will be populated via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Content Moderation Section -->
+      <div class="section" id="moderation-section" style="display: none;">
+        <div class="page-header">
+          <h1>Content Moderation</h1>
+          <p>Review and moderate user-generated content.</p>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div class="input-group" style="width: 300px; margin-bottom: 0;">
+            <i class="fas fa-search"></i>
+            <input type="text" class="input" placeholder="Search content..." id="content-search">
+          </div>
+          
+          <div class="tabs">
+            <div class="tab active" data-filter="all" onclick="filterContent('all')">All</div>
+            <div class="tab" data-filter="pending" onclick="filterContent('pending')">Pending</div>
+            <div class="tab" data-filter="approved" onclick="filterContent('approved')">Approved</div>
+            <div class="tab" data-filter="rejected" onclick="filterContent('rejected')">Rejected</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>Content Items</h2>
+            <div class="card-description">Review and moderate content submissions.</div>
+          </div>
+          <div class="card-body">
+            <table class="table" id="content-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Author</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Flag Reason</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Content will be populated via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Analytics Section -->
+      <div class="section" id="analytics-section" style="display: none;">
+        <div class="page-header">
+          <h1>Analytics & Reporting</h1>
+          <p>Monitor system performance and user activities.</p>
+        </div>
+        
+        <div class="tabs" style="margin-bottom: 25px;">
+          <div class="tab active" data-period="7d" onclick="changePeriod('7d')">7 days</div>
+          <div class="tab" data-period="30d" onclick="changePeriod('30d')">30 days</div>
+          <div class="tab" data-period="90d" onclick="changePeriod('90d')">90 days</div>
+          <span style="margin-left: auto; font-size: 14px; color: #6c757d;">Last updated: Today at 09:00 AM</span>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Total Users</span>
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">1,234</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+12.3% from last period</span>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Content Items</span>
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="stat-value">856</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+5.4% from last period</span>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-header">
+              <span>Moderation Rate</span>
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="stat-value">98.2%</div>
+            <div class="stat-change positive">
+              <i class="fas fa-arrow-up"></i>
+              <span>+2.1% from last period</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-bottom: 25px;">
+          <div class="card-header">
+            <h2>User Activity</h2>
+            <div class="card-description">User registrations, active users, and new users.</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="userChart"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-bottom: 25px;">
+          <div class="card-header">
+            <h2>Content Analytics</h2>
+            <div class="card-description">Distribution of different content types.</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="contentChart"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>User Status Distribution</h2>
+            <div class="card-description">Status breakdown of all users in the system.</div>
+          </div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="userStatusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Reports Section -->
+      <div class="section" id="reports-section" style="display: none;">
+        <div class="page-header">
+          <h1>Reports</h1>
+          <p>Generate and download system reports.</p>
+        </div>
+        
+        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px; gap: 15px;">
+          <select class="input" style="width: auto;">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="daily">Daily</option>
+            <option value="quarterly">Quarterly</option>
+          </select>
+          
+          <button class="btn btn-primary">
+            <i class="fas fa-file-alt" style="margin-right: 8px;"></i> Generate New Report
+          </button>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 25px;">
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-chart-bar" style="margin-right: 10px;"></i> User Activity Report</h2>
+              <div class="card-description">Details about user registrations, logins, and engagement metrics.</div>
+            </div>
+            <div class="card-body">
+              <div style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">Last generated: 2023-07-15</div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" style="flex: 1;">Preview</button>
+                <button class="btn btn-primary" style="flex: 1;">
+                  <i class="fas fa-download" style="margin-right: 8px;"></i> Download
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-search" style="margin-right: 10px;"></i> Content Moderation Report</h2>
+              <div class="card-description">Statistics on content approvals, rejections, and pending reviews.</div>
+            </div>
+            <div class="card-body">
+              <div style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">Last generated: 2023-07-14</div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" style="flex: 1;">Preview</button>
+                <button class="btn btn-primary" style="flex: 1;">
+                  <i class="fas fa-download" style="margin-right: 8px;"></i> Download
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fas fa-calendar-alt" style="margin-right: 10px;"></i> Monthly Summary</h2>
+              <div class="card-description">Overview of all system activities for the previous month.</div>
+            </div>
+            <div class="card-body">
+              <div style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">Last generated: 2023-07-01</div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" style="flex: 1;">Preview</button>
+                <button class="btn btn-primary" style="flex: 1;">
+                  <i class="fas fa-download" style="margin-right: 8px;"></i> Download
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>Custom Reports</h2>
+            <div class="card-description">Generate custom reports based on specific criteria.</div>
+          </div>
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+              <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Report Type</label>
+                <select class="input">
+                  <option value="user">User Activity</option>
+                  <option value="content">Content Moderation</option>
+                  <option value="system">System Performance</option>
+                </select>
+              </div>
+              
+              <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Date Range</label>
+                <select class="input">
+                  <option value="last30">Last 30 days</option>
+                  <option value="last7">Last 7 days</option>
+                  <option value="last90">Last 90 days</option>
+                  <option value="custom">Custom range</option>
+                </select>
+              </div>
+              
+              <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Format</label>
+                <select class="input">
+                  <option value="pdf">PDF</option>
+                  <option value="excel">Excel</option>
+                  <option value="csv">CSV</option>
+                </select>
+              </div>
+            </div>
+            
+            <div style="text-align: right;">
+              <button class="btn btn-primary">
+                <i class="fas fa-file-alt" style="margin-right: 8px;"></i> Generate Custom Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Section -->
+      <div class="section" id="settings-section" style="display: none;">
+        <div class="page-header">
+          <h1>Settings</h1>
+          <p>Configure system settings and preferences.</p>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>General Settings</h2>
+            <div class="card-description">Basic system configuration options.</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Site Name</label>
+              <input type="text" class="input" value="Admin Dashboard">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Contact Email</label>
+              <input type="email" class="input" value="admin@example.com">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Time Zone</label>
+              <select class="input">
+                <option value="utc">UTC</option>
+                <option value="est" selected>Eastern Time (ET)</option>
+                <option value="cst">Central Time (CT)</option>
+                <option value="pst">Pacific Time (PT)</option>
+              </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" checked style="margin-right: 10px;">
+                <span>Enable email notifications</span>
+              </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" checked style="margin-right: 10px;">
+                <span>Allow user registrations</span>
+              </label>
+            </div>
+            
+            <div style="text-align: right;">
+              <button class="btn btn-primary">Save Settings</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h2>Security</h2>
+            <div class="card-description">Security and access control options.</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 20px;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" checked style="margin-right: 10px;">
+                <span>Enable two-factor authentication</span>
+              </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="checkbox" style="margin-right: 10px;">
+                <span>Require strong passwords</span>
+              </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Session Timeout (minutes)</label>
+              <input type="number" class="input" value="30">
+            </div>
+            
+            <div style="text-align: right;">
+              <button class="btn btn-primary">Save Security Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Toast notification container -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <div class="toast-content">
+      <h4>Success</h4>
+      <p>Action completed successfully.</p>
+    </div>
+  </div>
+  
+  <script>
+    // Sample data
+    const users = [
+      { id: 1, name: "John Doe", email: "john@example.com", status: "active", role: "User", joinDate: "2023-01-15" },
+      { id: 2, name: "Jane Smith", email: "jane@example.com", status: "pending", role: "Editor", joinDate: "2023-02-20" },
+      { id: 3, name: "Michael Johnson", email: "michael@example.com", status: "blocked", role: "User", joinDate: "2023-03-10" },
+      { id: 4, name: "Emily Brown", email: "emily@example.com", status: "active", role: "Admin", joinDate: "2023-04-05" },
+      { id: 5, name: "David Wilson", email: "david@example.com", status: "pending", role: "User", joinDate: "2023-05-12" },
+    ];
+    
+    const contents = [
+      { id: 1, title: "Welcome to our platform", type: "post", author: "John Doe", date: "2023-06-10", status: "pending", flagReason: "Potential spam" },
+      { id: 2, title: "Product review: Latest gadgets", type: "article", author: "Emily Brown", date: "2023-06-12", status: "approved", flagReason: null },
+      { id: 3, title: "Community guidelines", type: "page", author: "Admin", date: "2023-06-15", status: "approved", flagReason: null },
+      { id: 4, title: "Special offers this summer", type: "post", author: "David Wilson", date: "2023-06-18", status: "rejected", flagReason: "Misleading information" },
+      { id: 5, title: "Tech news roundup", type: "article", author: "Jane Smith", date: "2023-06-20", status: "pending", flagReason: "Need verification" },
+    ];
+    
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show default section (users)
+      showSection('users');
+      
+      // Populate tables
+      populateUsersTable();
+      populateContentTable();
+      
+      // Initialize charts
+      initCharts();
+      
+      // Add event listeners
+      document.getElementById('user-search').addEventListener('input', filterUsers);
+      document.getElementById('content-search').addEventListener('input', filterContent);
+    });
+    
+    // Function to toggle sidebar on mobile
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('active');
+    }
+    
+    // Function to show a section
+    function showSection(sectionId) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      // Show the selected section
+      document.getElementById(`${sectionId}-section`).style.display = 'block';
+      
+      // Update active menu item
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector(`.menu-item[data-section="${sectionId}"]`).classList.add('active');
+      
+      // Close sidebar on mobile
+      if (window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('active');
+      }
+    }
+    
+    // Function to populate users table
+    function populateUsersTable() {
+      const tableBody = document.querySelector('#users-table tbody');
+      tableBody.innerHTML = '';
+      
+      users.forEach(user => {
+        const row = document.createElement('tr');
+        
+        // Status badge class
+        let badgeClass = 'badge-success';
+        if (user.status === 'pending') badgeClass = 'badge-warning';
+        if (user.status === 'blocked') badgeClass = 'badge-danger';
+        
+        // Capitalize status
+        const status = user.status.charAt(0).toUpperCase() + user.status.slice(1);
+        
+        row.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td><span class="badge ${badgeClass}">${status}</span></td>
+          <td>${user.role}</td>
+          <td>${user.joinDate}</td>
+          <td>
+            <div class="actions">
+              ${user.status !== 'active' ? `<button class="btn btn-icon btn-success" onclick="approveUser(${user.id})"><i class="fas fa-user-check"></i></button>` : ''}
+              ${user.status !== 'blocked' ? `<button class="btn btn-icon btn-danger" onclick="blockUser(${user.id})"><i class="fas fa-user-slash"></i></button>` : ''}
+            </div>
+          </td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+    
+    // Function to populate content table
+    function populateContentTable(filter = 'all') {
+      const tableBody = document.querySelector('#content-table tbody');
+      tableBody.innerHTML = '';
+      
+      let filteredContents = contents;
+      if (filter !== 'all') {
+        filteredContents = contents.filter(content => content.status === filter);
+      }
+      
+      filteredContents.forEach(content => {
+        const row = document.createElement('tr');
+        
+        // Status badge class
+        let badgeClass = 'badge-success';
+        if (content.status === 'pending') badgeClass = 'badge-warning';
+        if (content.status === 'rejected') badgeClass = 'badge-danger';
+        
+        // Capitalize status
+        const status = content.status.charAt(0).toUpperCase() + content.status.slice(1);
+        
+        row.innerHTML = `
+          <td>${content.title}</td>
+          <td style="text-transform: capitalize;">${content.type}</td>
+          <td>${content.author}</td>
+          <td>${content.date}</td>
+          <td><span class="badge ${badgeClass}">${status}</span></td>
+          <td>${content.flagReason || '—'}</td>
+          <td>
+            <div class="actions">
+              <button class="btn btn-icon btn-outline"><i class="fas fa-eye"></i></button>
+              ${content.status !== 'approved' ? `<button class="btn btn-icon btn-success" onclick="approveContent(${content.id})"><i class="fas fa-shield-alt"></i></button>` : ''}
+              ${content.status !== 'rejected' ? `<button class="btn btn-icon btn-danger" onclick="rejectContent(${content.id})"><i class="fas fa-ban"></i></button>` : ''}
+            </div>
+          </td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+    
+    // Function to filter users
+    function filterUsers() {
+      const searchTerm = document.getElementById('user-search').value.toLowerCase();
+      const tableRows = document.querySelectorAll('#users-table tbody tr');
+      
+      tableRows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const email = row.cells[1].textContent.toLowerCase();
+        
+        if (name.includes(searchTerm) || email.includes(searchTerm)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+    
+    // Function to filter content
+    function filterContent(filter = null) {
+      // Update active tab
+      if (filter) {
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        document.querySelector(`.tab[data-filter="${filter}"]`).classList.add('active');
+      }
+      
+      const searchTerm = document.getElementById('content-search').value.toLowerCase();
+      const activeFilter = document.querySelector('.tabs .tab.active').getAttribute('data-filter');
+      
+      if (activeFilter === 'all') {
+        // Just apply search filter
+        const tableRows = document.querySelectorAll('#content-table tbody tr');
+        
+        tableRows.forEach(row => {
+          const title = row.cells[0].textContent.toLowerCase();
+          const author = row.cells[2].textContent.toLowerCase();
+          
+          if (title.includes(searchTerm) || author.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      } else {
+        // Apply both status and search filters
+        populateContentTable(activeFilter);
+        
+        if (searchTerm) {
+          const tableRows = document.querySelectorAll('#content-table tbody tr');
+          
+          tableRows.forEach(row => {
+            const title = row.cells[0].textContent.toLowerCase();
+            const author = row.cells[2].textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || author.includes(searchTerm)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+      }
+    }
+    
+    // Function to change analytics period
+    function changePeriod(period) {
+      const tabs = document.querySelectorAll('[data-period]');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`[data-period="${period}"]`).classList.add('active');
+      
+      // Here you would typically update the charts with new data
+      // For this demo, we'll just leave the charts as they are
+    }
+    
+    // Function to initialize charts
+    function initCharts() {
+      // User activity chart
+      const userCtx = document.getElementById('userChart').getContext('2d');
+      new Chart(userCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          datasets: [
+            {
+              label: 'Total Users',
+              data: [400, 500, 600, 700, 800, 1000, 1200],
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.3,
+            },
+            {
+              label: 'Active Users',
+              data: [200, 350, 420, 500, 600, 700, 800],
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              tension: 0.3,
+            },
+            {
+              label: 'New Users',
+              data: [240, 280, 320, 400, 380, 500, 600],
+              borderColor: '#F59E0B',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              tension: 0.3,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        }
+      });
+      
+      // Content chart
+      const contentCtx = document.getElementById('contentChart').getContext('2d');
+      new Chart(contentCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          datasets: [
+            {
+              label: 'Posts',
+              data: [65, 78, 90, 81, 95, 110, 120],
+              backgroundColor: '#3B82F6',
+            },
+            {
+              label: 'Articles',
+              data: [40, 52, 60, 55, 65, 75, 85],
+              backgroundColor: '#8B5CF6',
+            },
+            {
+              label: 'Pages',
+              data: [18, 20, 22, 25, 28, 30, 32],
+              backgroundColor: '#F59E0B',
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        }
+      });
+      
+      // User status chart
+      const statusCtx = document.getElementById('userStatusChart').getContext('2d');
+      new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+          labels: ['Active', 'Pending', 'Blocked'],
+          datasets: [{
+            data: [540, 210, 90],
+            backgroundColor: [
+              '#10B981',
+              '#F59E0B',
+              '#EF4444'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        }
+      });
+    }
+    
+    // User actions
+    function approveUser(userId) {
+      // In a real app, you would send a request to your backend
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].id === userId) {
+          users[i].status = 'active';
+          break;
+        }
+      }
+      
+      populateUsersTable();
+      showToast('User Approved', 'User has been successfully approved.', 'success');
+    }
+    
+    function blockUser(userId) {
+      // In a real app, you would send a request to your backend
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].id === userId) {
+          users[i].status = 'blocked';
+          break;
+        }
+      }
+      
+      populateUsersTable();
+      showToast('User Blocked', 'User has been blocked from the system.', 'error');
+    }
+    
+    // Content actions
+    function approveContent(contentId) {
+      // In a real app, you would send a request to your backend
+      for (let i = 0; i < contents.length; i++) {
+        if (contents[i].id === contentId) {
+          contents[i].status = 'approved';
+          contents[i].flagReason = null;
+          break;
+        }
+      }
+      
+      const activeFilter = document.querySelector('.tabs .tab.active').getAttribute('data-filter');
+      populateContentTable(activeFilter);
+      showToast('Content Approved', 'Content has been approved and published.', 'success');
+    }
+    
+    function rejectContent(contentId) {
+      // In a real app, you would send a request to your backend
+      for (let i = 0; i < contents.length; i++) {
+        if (contents[i].id === contentId) {
+          contents[i].status = 'rejected';
+          break;
+        }
+      }
+      
+      const activeFilter = document.querySelector('.tabs .tab.active').getAttribute('data-filter');
+      populateContentTable(activeFilter);
+      showToast('Content Rejected', 'Content has been rejected and hidden from view.', 'error');
+    }
+    
+    // Toast notification function
+    function showToast(title, message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const icon = toast.querySelector('.toast-icon i');
+      const toastTitle = toast.querySelector('.toast-content h4');
+      const toastMessage = toast.querySelector('.toast-content p');
+      
+      // Set content
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      
+      // Set type
+      toast.className = 'toast';
+      if (type === 'success') {
+        toast.classList.add('toast-success');
+        icon.className = 'fas fa-check-circle';
+      } else {
+        toast.classList.add('toast-error');
+        icon.className = 'fas fa-times-circle';
+      }
+      
+      // Show toast
+      toast.classList.add('show');
+      
+      // Hide toast after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
