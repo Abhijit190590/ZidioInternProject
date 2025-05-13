@@ -229,7 +229,7 @@
                 />
                 <p class="error-text" id="captchaError" aria-live="polite"></p>
             </div>
-            <button type="submit" onclick="location.href='adminPanel.html'">Log In</button>
+            <button type="submit">Log In</button>
         </form>
     </div>
 
@@ -259,19 +259,9 @@
             const num2 = Math.floor(Math.random() * 20) + 1;
             const operator = Math.random() < 0.5 ? "+" : "-";
 
-            let question, answer;
-            if (operator === "+") {
-                question = `${num1} + ${num2}`;
-                answer = num1 + num2;
-            } else {
-                if (num2 > num1) {
-                    question = `${num2} - ${num1}`;
-                    answer = num2 - num1;
-                } else {
-                    question = `${num1} - ${num2}`;
-                    answer = num1 - num2;
-                }
-            }
+            const question = operator === "+" ? `${num1} + ${num2}` : `${Math.max(num1, num2)} - ${Math.min(num1, num2)}`;
+            const answer = operator === "+" ? num1 + num2 : Math.abs(num1 - num2);
+
             captchaDisplay.textContent = question;
             currentCaptchaAnswer = answer;
             captchaInput.value = "";
@@ -287,6 +277,9 @@
 
             if (!empidInput.value.trim()) {
                 empidError.textContent = "Employee ID is required.";
+                valid = false;
+            } else if (!/^[a-zA-Z0-9]+$/.test(empidInput.value)) {
+                empidError.textContent = "Employee ID must be alphanumeric.";
                 valid = false;
             }
 
@@ -305,10 +298,16 @@
             if (!passwordInput.value.trim()) {
                 passwordError.textContent = "Password is required.";
                 valid = false;
+            } else if (passwordInput.value.length < 6) {
+                passwordError.textContent = "Password must be at least 6 characters long.";
+                valid = false;
             }
 
             if (!captchaInput.value.trim()) {
                 captchaError.textContent = "CAPTCHA answer is required.";
+                valid = false;
+            } else if (!/^[0-9]+$/.test(captchaInput.value)) {
+                captchaError.textContent = "CAPTCHA answer must be numeric.";
                 valid = false;
             } else if (parseInt(captchaInput.value, 10) !== currentCaptchaAnswer) {
                 captchaError.textContent = "CAPTCHA answer is incorrect.";
@@ -321,9 +320,18 @@
         loginForm.addEventListener("submit", function (e) {
             e.preventDefault();
             if (validateForm()) {
-                alert("Admin login successful!");
-                loginForm.reset();
-                generateCaptcha();
+                // Check credentials including DOB
+                const dob = new Date(dobInput.value);
+                const expectedDOB = new Date("1990-01-01"); // Example DOB for admin
+                
+                if (empidInput.value === "admin" && 
+                    passwordInput.value === "admin123" && 
+                    dob.getTime() === expectedDOB.getTime()) {
+                    alert("Admin login successful!");
+                    window.location.href = "adminPanel.html";
+                } else {
+                    alert("Invalid credentials. Please check your Employee ID, Password, and DOB.");
+                }
             }
         });
 
