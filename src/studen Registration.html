@@ -185,5 +185,51 @@
       <button type="submit">Register</button>
     </form>
   </section>
+  <script>
+    // Password match validation
+    const form = document.querySelector('form');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
+
+     form.addEventListener('submit', function(event) {
+      // Check if passwords match
+      if (password.value !== confirmPassword.value) {
+        event.preventDefault();
+        alert('Passwords do not match!');
+        confirmPassword.focus();
+        return false;
+      }
+
+      // Mandatory: Validate phone number pattern
+      const phone = document.getElementById('phone');
+      const phonePattern = /^\+?\d{0,15}$/;
+      if (!phonePattern.test(phone.value)) {
+        event.preventDefault();
+        alert('Please enter a valid phone number.');
+        phone.focus();
+        return false;
+      }
+
+      // Validate date of birth is not in the future
+      const dob = document.getElementById('dob');
+      const today = new Date();
+      const dobDate = new Date(dob.value);
+      if (dobDate > today) {
+        event.preventDefault();
+        alert('Date of birth cannot be in the future.');
+        dob.focus();
+        return false;
+      }
+    });
+
+    // Optional: Live password match feedback
+    confirmPassword.addEventListener('input', function() {
+      if (confirmPassword.value !== password.value) {
+        confirmPassword.style.borderColor = 'red';
+      } else {
+        confirmPassword.style.borderColor = '#cbd5e1';
+      }
+    });
+  </script>
 </body>
 </html>
