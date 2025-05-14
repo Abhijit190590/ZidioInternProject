@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+<title>Recruiter Login</title>
+
+<style>
+
+  /* Reset */
+
+  * {
+
+    box-sizing: border-box;
+
+  }
+
+  body {
+
+    margin: 0;
+
+    background: #0d1117;
+
+    color: #c9d1d9;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 100vh;
+
+    padding: 15px;
+
+  }
+
+  .container {
+
+    background: #161b22;
+
+    padding: 25px 30px;
+
+    border-radius: 12px;
+
+    width: 100%;
+
+    max-width: 350px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+
+  }
+
+  h1 {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+    font-size: 1.75rem;
+
+    color: #58a6ff;
+
+    letter-spacing: 1px;
+
+  }
+
+  form {
+
+    display: flex;
+
+    flex-direction: column;
+
+  }
+
+  label {
+
+    font-weight: 600;
+
+    font-size: 0.9rem;
+
+    margin-bottom: 6px;
+
+    color: #8b949e;
+
+  }
+
+  input[type="text"],
+
+  input[type="password"],
+
+  input[type="date"],
+
+  input[type="text"].captcha-input {
+
+    padding: 10px 12px;
+
+    border-radius: 6px;
+
+    border: 1.8px solid #30363d;
+
+    background: #0d1117;
+
+    color: #c9d1d9;
+
+    font-size: 1rem;
+
+    margin-bottom: 20px;
+
+    transition: border-color 0.3s ease;
+
+  }
+
+  input[type="text"]:focus,
+
+  input[type="password"]:focus,
+
+  input[type="date"]:focus,
+
+  input[type="text"].captcha-input:focus {
+
+    outline: none;
+
+    border-color: #58a6ff;
+
+    background: #161b22;
+
+  }
+
+  .captcha-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+
+  }
+
+  .captcha-box {
+
+    font-weight: 700;
+
+    font-size: 1.2rem;
+
+    letter-spacing: 3px;
+
+    background: #0b0f14;
+
+    border: 2px solid #58a6ff;
+
+    border-radius: 6px;
+
+    padding: 8px 14px;
+
+    user-select: none;
+
+    font-family: monospace;
+
+    color: #58a6ff;
+
+  }
+
+  .refresh-btn {
+
+    background: transparent;
+
+    border: none;
+
+    color: #58a6ff;
+
+    cursor: pointer;
+
+    margin-left: 12px;
+
+    user-select: none;
+
+    font-size: 1.1rem;
+
+    padding: 4px 7px;
+
+    border-radius: 5px;
+
+    transition: background 0.25s ease;
+
+  }
+
+  .refresh-btn:hover {
+
+    background: #2f81f7;
+
+  }
+
+  button[type="submit"] {
+
+    background: #238636;
+
+    border: none;
+
+    color: white;
+
+    font-weight: 700;
+
+    padding: 12px;
+
+    font-size: 1rem;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: background 0.3s ease;
+
+  }
+
+  button[type="submit"]:hover {
+
+    background: #2ea043;
+
+  }
+
+  .error {
+
+    color: #ff6b6b;
+
+    font-size: 0.875rem;
+
+    margin-top: -16px;
+
+    margin-bottom: 16px;
+
+    font-weight: 600;
+
+    display: none;
+
+  }
+
+  @media (max-width: 400px) {
+
+    .container {
+
+      padding: 20px;
+
+      max-width: 100%;
+
+    }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+  <div class="container" role="main" aria-label="Recruiter login form">
+
+    <h1>Recruiter Login</h1>
+
+    <form id="loginForm" novalidate>
+
+      <label for="recruiterId">Recruiter ID</label>
+
+      <input type="text" id="recruiterId" name="recruiterId" required autocomplete="username" placeholder="Enter your Recruiter ID" />
+
+
+
+      <label for="regDate">Registration Date</label>
+
+      <input type="date" id="regDate" name="regDate" required max="" />
+
+
+
+      <label for="password">Password</label>
+
+      <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password" />
+
+
+
+      <label for="captchaInput">Captcha</label>
+
+      <div class="captcha-row" aria-live="polite" aria-atomic="true">
+
+        <div id="captchaBox" class="captcha-box" aria-label="Captcha code"></div>
+
+        <button type="button" class="refresh-btn" id="refreshCaptcha" aria-label="Refresh captcha">&#x21bb;</button>
+
+      </div>
+
+      <input
+
+        type="text"
+
+        id="captchaInput"
+
+        name="captchaInput"
+
+        class="captcha-input"
+
+        placeholder="Enter captcha"
+
+        required
+
+        aria-required="true"
+
+        autocomplete="off"
+
+      />
+
+      <div class="error" id="captchaError" role="alert">Captcha does not match.</div>
+
+
+
+      <button type="submit">Login</button>
+
+    </form>
+
+  </div>
+
+
+
+<script>
+
+  // set max date for Registration Date as today's date
+
+  document.getElementById('regDate').max = new Date().toISOString().split('T')[0];
+
+
+
+  function generateCaptcha(length = 6) {
+
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // excluded ambiguous chars
+
+    let captcha = '';
+
+    for (let i = 0; i < length; i++) {
+
+      captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+
+    }
+
+    return captcha;
+
+  }
+
+
+
+  const captchaBox = document.getElementById('captchaBox');
+
+  const captchaInput = document.getElementById('captchaInput');
+
+  const refreshBtn = document.getElementById('refreshCaptcha');
+
+  const captchaError = document.getElementById('captchaError');
+
+
+
+  let currentCaptcha = '';
+
+
+
+  function loadCaptcha() {
+
+    currentCaptcha = generateCaptcha();
+
+    captchaBox.textContent = currentCaptcha;
+
+    captchaInput.value = '';
+
+    captchaError.style.display = 'none';
+
+  }
+
+
+
+  refreshBtn.addEventListener('click', loadCaptcha);
+
+
+
+  loadCaptcha();
+
+
+
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+
+    e.preventDefault();
+
+    captchaError.style.display = 'none';
+
+    if (captchaInput.value.trim().toUpperCase() !== currentCaptcha) {
+
+      captchaError.style.display = 'block';
+
+      captchaInput.focus();
+
+      return false;
+
+    }
+
+    // Form valid and captcha correct, proceed submission (for demo just alert)
+
+    alert('Login submitted successfully!');
+
+    this.reset();
+
+    loadCaptcha();
+
+  });
+
+</script>
+
+</body>
+
+</html>
