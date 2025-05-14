@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -497,6 +496,10 @@
           <i class="fas fa-cog"></i>
           <span>Settings</span>
         </div>
+        <div class="menu-item" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </div>
       </div>
       
       <div class="user-info">
@@ -550,6 +553,34 @@
                 <!-- Users will be populated via JavaScript -->
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Add New User</h2>
+            <div class="card-description">Fill in the details to add a new user.</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Name</label>
+              <input type="text" class="input" id="new-user-name" placeholder="Enter user name">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Email</label>
+              <input type="email" class="input" id="new-user-email" placeholder="Enter user email">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Role</label>
+              <select class="input" id="new-user-role">
+                <option value="User">User</option>
+                <option value="Editor">Editor</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div style="text-align: right;">
+              <button class="btn btn-primary" onclick="addNewUser()">Add User</button>
+            </div>
           </div>
         </div>
       </div>
@@ -885,6 +916,26 @@
             
             <div style="text-align: right;">
               <button class="btn btn-primary">Save Security Settings</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Update User Information</h2>
+            <div class="card-description">Change your username and password.</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Username</label>
+              <input type="text" class="input" id="username" placeholder="Enter new username">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Password</label>
+              <input type="password" class="input" id="password" placeholder="Enter new password">
+            </div>
+            <div style="text-align: right;">
+              <button class="btn btn-primary" onclick="updateUserInfo()">Update</button>
             </div>
           </div>
         </div>
@@ -1292,6 +1343,60 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 3000);
+    }
+    
+    // Logout function
+    function logout() {
+      if (confirm('Are you sure you want to log out?')) {
+        window.location.href = 'AdmilLogin.html';
+      }
+    }
+
+    // Update user information function
+    function updateUserInfo() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        showToast('Error', 'Both fields are required.', 'error');
+        return;
+      }
+
+      // Simulate a dynamic backend call
+      fetch('/update-user-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to update user information.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          showToast('Success', 'User information updated successfully.', 'success');
+        })
+        .catch(error => {
+          showToast('Error', error.message, 'error');
+        });
+    }
+
+    // Add new user function
+    function addNewUser() {
+      const name = document.getElementById('new-user-name').value;
+      const email = document.getElementById('new-user-email').value;
+      const role = document.getElementById('new-user-role').value;
+
+      if (!name || !email || !role) {
+        showToast('Error', 'All fields are required.', 'error');
+        return;
+      }
+
+      // Simulate adding a new user (replace with actual backend call)
+      showToast('Success', 'New user added successfully.', 'success');
     }
   </script>
 </body>
