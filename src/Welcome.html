@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Recruiter Link</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    body {
+      background: #2563eb;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 1.5rem 2rem;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+    
+    .btn-container {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      /* Prevent dropdown from moving on hover */
+      vertical-align: middle;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: rgba(255,255,255,0.9);
+      min-width: 180px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 3;
+      border-radius: 15px;
+      margin-top: 0.1rem;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    
+    .dropdown-content a {
+      color: #333;
+      padding: 0.75rem 1.25rem;
+      text-decoration: none;
+      display: block;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      font-weight: 500;
+    }
+    
+    .dropdown-content a:last-child {
+      border-bottom: none;
+    }
+    
+    .dropdown-content a:hover {
+      background: linear-gradient(45deg, rgba(255,154,158,0.2), rgba(250,208,196,0.2));
+      transform: translateX(-5px);
+      color: #ff6b6b;
+    }
+    
+    .dropdown:hover .dropdown-content,
+    .dropdown:focus-within .dropdown-content {
+      display: block;
+      animation: fadeInUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .dropdown .dropdown-content {
+      pointer-events: auto;
+    }
+    .dropdown .btn:active,
+    .dropdown .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #2563eb44;
+    }
+    .dropdown .btn {
+      z-index: 2;
+      position: relative;
+    }
+    
+    .show {
+      display: block;
+      animation: fadeInUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .login-btn {
+      background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    }
+    
+    .login-btn:hover {
+      background: linear-gradient(45deg, #ff5252, #ff7676);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+    }
+    
+    .about-btn {
+      background: linear-gradient(45deg, #4facfe, #00f2fe);
+    }
+    
+    .about-btn:hover {
+      background: linear-gradient(45deg, #3aa1fd, #00d9fe);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(79,172,254,0.4);
+    }
+    
+    .register-btn {
+      background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+    }
+    
+    .register-btn:hover {
+      background: linear-gradient(45deg, #9a7fd0, #f9b1e4);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(161,140,209,0.4);
+    }
+    
+    .contact-btn {
+      background: linear-gradient(45deg, #fbc2eb, #a6c1ee);
+    }
+    .contact-btn:hover {
+      background: linear-gradient(45deg, #f9b1e4, #7f9cf5);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(161,140,209,0.3);
+    }
+    
+    .chevron-down {
+      width: 16px;
+      height: 16px;
+      margin-left: 8px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .dropdown:hover .chevron-down {
+      transform: rotate(180deg);
+    }
+    
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      min-height: calc(100vh - 10rem);
+    }
+    
+    .welcome-text {
+      font-size: 4rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      position: relative;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .welcome-word {
+      font-family: 'Brush Script MT', 'Segoe Script', cursive;
+      font-size: 5.5rem;
+      background: linear-gradient(45deg, #ff6b6b, #4facfe, #a18cd1, #00f2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+      animation: rainbow 8s ease infinite;
+      background-size: 300% 300%;
+      text-shadow: none;
+      transform: rotate(-5deg);
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .welcome-word::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, rgba(255,107,107,0.4), rgba(79,172,254,0.4), rgba(161,140,209,0.4));
+      border-radius: 50%;
+      filter: blur(5px);
+      z-index: -1;
+      animation: rainbow 8s ease infinite;
+      background-size: 300% 300%;
+    }
+    
+    .welcome-word:hover {
+      transform: rotate(0deg) scale(1.1);
+    }
+    
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .welcome-rest {
+      color: white;
+      display: inline-block;
+      transition: all 0.4s ease;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    
+    .welcome-text:hover .welcome-rest {
+      transform: translateX(15px);
+    }
+    
+    .welcome-description {
+      font-size: 1.3rem;
+      color: white;
+      max-width: 800px;
+      text-align: center;
+      margin-bottom: 3rem;
+      transition: all 0.4s ease;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      background: rgba(255,255,255,0.2);
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    
+    .welcome-description:hover {
+      transform: scale(1.05);
+      background: rgba(255,255,255,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .card-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      width: 100%;
+      perspective: 1000px;
+    }
+    
+    @media (min-width: 768px) {
+      .card-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .card {
+      background: rgba(255,255,255,0.85);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.3);
+      transform-style: preserve-3d;
+    }
+    
+    .card:hover {
+      transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+    
+    .icon-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 50%;
+      margin-bottom: 1.5rem;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .icon-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(transparent, transparent, transparent, var(--icon-color));
+      animation: rotate 4s linear infinite;
+    }
+    
+    .icon-container::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: white;
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .card:hover .icon-container {
+      transform: rotate(15deg) scale(1.1);
+    }
+    
+    .student-icon {
+      --icon-color: #ff6b6b;
+    }
+    
+    .recruiter-icon {
+      --icon-color: #4facfe;
+    }
+    
+    .events-icon {
+      --icon-color: #a18cd1;
+    }
+    
+    .icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      transition: all 0.5s ease;
+      z-index: 1;
+    }
+    
+    .card:hover .icon {
+      transform: scale(1.2);
+    }
+    
+    .student-icon .icon {
+      color: #ff6b6b;
+    }
+    
+    .recruiter-icon .icon {
+      color: #4facfe;
+    }
+    
+    .events-icon .icon {
+      color: #a18cd1;
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .card-title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      background: var(--icon-color);
+      transition: all 0.5s ease;
+    }
+    
+    .card:hover .card-title::after {
+      width: 50%;
+    }
+    
+    .card-text {
+      text-align: center;
+      color: #555;
+      transition: all 0.3s ease;
+      line-height: 1.6;
+    }
+    
+    .card:hover .card-text {
+      color: #333;
+    }
+    
+    .footer {
+      background: rgba(0,0,0,0.7);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      transition: all 0.5s ease;
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .footer:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    
+    /* Floating bubbles decoration */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(2px);
+      animation: float 15s infinite linear;
+      z-index: -1;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      transition: box-shadow 0.3s, border 0.3s;
+    }
+    .bubble:hover {
+      box-shadow: 0 16px 48px 0 rgba(31, 38, 135, 0.25);
+      border: 2.5px solid #a18cd1;
+      background: rgba(255,255,255,0.18);
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-100px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating bubbles -->
+  <div class="bubble" style="width: 100px; height: 100px; top: 20%; left: 10%; animation-delay: 0s;"></div>
+  <div class="bubble" style="width: 150px; height: 150px; top: 60%; left: 80%; animation-delay: 2s;"></div>
+  <div class="bubble" style="width: 80px; height: 80px; top: 30%; left: 70%; animation-delay: 4s;"></div>
+  <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 20%; animation-delay: 6s;"></div>
+  
+  <!-- Top right header with buttons -->
+  <header class="header">
+    <div class="btn-container">
+      <!-- Home Button -->
+      <button onclick="location.href='StudentRecruiterLink.html'" class="btn login-btn">Home</button>
+      
+      <!-- Contact Button -->
+      <button onclick="location.href='contact.html'" class="btn contact-btn">Contact</button>
+      
+      <!-- About Button -->
+      <button onclick="location.href='about.html'" class="btn about-btn">About</button>
+      
+      <!-- Login Dropdown -->
+      <div class="dropdown">
+        <button onclick="toggleDropdown('loginDropdown')" class="btn login-btn">
+          Login
+          <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="loginDropdown" class="dropdown-content">
+          <a href="StudentLogin.html">Student Login</a>
+          <a href="AdminLogin.html">Admin Login</a>
+          <a href="Recuirterlogin.html">Recruiter Login</a>
+        </div>
+      </div>
+      
+      <!-- Register Dropdown -->
+      <div class="dropdown">
+        <button onclick="toggleDropdown('registerDropdown')" class="btn register-btn">
+          Register
+          <svg class="chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div id="registerDropdown" class="dropdown-content">
+          <a href="studenRegistration.html">Student Registration</a>
+          <a href="/register-recruiter">Recruiter Registration</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Main hero content area -->
+  <main class="main-content">
+    <h1 class="welcome-text">
+      <span class="welcome-word">Welcome</span>
+      <span class="welcome-rest"> to our Portal</span>
+    </h1>
+    <p class="welcome-description">
+      Connect with opportunities, manage your profile, and explore our services designed for students and recruiters.
+    </p>
+    
+    <div class="card-container">
+      <div class="card">
+        <div class="icon-container student-icon">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">For Students</h2>
+        <p class="card-text">Access courses, apply for opportunities, and manage your academic profile with our vibrant student portal.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon-container recruiter-icon">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">For Recruiters</h2>
+        <p class="card-text">Find top talent, post exciting job opportunities, and connect with potential candidates effortlessly.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon-container events-icon">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h2 class="card-title">Upcoming Events</h2>
+        <p class="card-text">Stay updated with workshops, career fairs, networking events, and exciting opportunities.</p>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; <script>document.write(new Date().getFullYear());</script> Portal Access Hub. All rights reserved.</p>
+    <div style="margin-top:1rem;">
+      <a href="mailto:support@portalaccesshub.com" style="color:#a18cd1;text-decoration:underline;margin-right:1.5rem;">Contact Support</a>
+      <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:#4facfe;text-decoration:underline;">Back to Top</a>
+    </div>
+  </footer>
+
+  <script>
+    // Close the dropdown when clicking outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.btn')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+          const openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    // Toggle dropdown visibility
+    function toggleDropdown(id) {
+      // No longer needed for hover-based dropdowns, but kept for accessibility (keyboard)
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.id !== id && openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+      document.getElementById(id).classList.toggle("show");
+    }
+    
+    // Create more floating bubbles dynamically
+    document.addEventListener('DOMContentLoaded', function() {
+      const body = document.querySelector('body');
+      for (let i = 0; i < 8; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = Math.random() * 100 + 50;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const delay = Math.random() * 8;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = left + '%';
+        bubble.style.top = top + '%';
+        bubble.style.animationDelay = delay + 's';
+        bubble.style.opacity = Math.random() * 0.3 + 0.1;
+        body.appendChild(bubble);
+      }
+    });
+
+    // Accessibility: allow closing dropdowns with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+          dropdowns[i].classList.remove('show');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
