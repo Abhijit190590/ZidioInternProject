@@ -1,405 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Student Dashboard - Jobs & Internships</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
-
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: 'Nunito', sans-serif;
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
-    color: #222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-  }
-
-  .dashboard-container {
-    background: #fff;
-    width: 100%;
-    max-width: 350px;
-    max-height: 600px;
-    border-radius: 14px;
-    box-shadow: 0 16px 32px rgba(0,0,0,0.25);
-    padding: 20px 16px 24px 16px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  header {
-    margin-bottom: 18px;
-    text-align: center;
-  }
-
-  header h1 {
-    margin: 0;
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #4e54c8;
-  }
-  header p {
-    margin: 4px 0 0 0;
-    font-size: 1rem;
-    color: #555;
-  }
-
-  .tabs {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
-
-  .tab-btn {
-    flex: 1;
-    padding: 10px 0;
-    font-weight: 600;
-    color: #555;
-    background: #f3f3f3;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    user-select: none;
-  }
-  .tab-btn.active {
-    background: #4e54c8;
-    color: white;
-    border-color: #373acc;
-    box-shadow: 0 6px 14px rgba(78,84,200,0.7);
-  }
-
-  section {
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 6px; /* For scrollbar clearance */
-  }
-
-  ul.listings {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  ul.listings li {
-    border: 1.8px solid #ddd;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    background: #fafafa;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-
-  ul.listings li > div {
-    flex: 1;
-  }
-
-  ul.listings li .title {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-bottom: 6px;
-    color: #4e54c8;
-  }
-  ul.listings li .company {
-    font-size: 0.9rem;
-    color: #666;
-    font-style: italic;
-  }
-
-  button.apply-btn {
-    background-color: #4e54c8;
-    border: none;
-    color: white;
-    font-weight: 700;
-    padding: 8px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  button.apply-btn:hover:not(:disabled) {
-    background-color: #373acc;
-  }
-  button.apply-btn:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-
-  .status-section {
-    margin-top: 24px;
-  }
-
-  .status-section h2 {
-    font-size: 1.3rem;
-    color: #4e54c8;
-    margin-bottom: 14px;
-    text-align: center;
-  }
-
-  ul.application-status {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  ul.application-status li {
-    border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    background: #f5f5ff;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    font-size: 0.95rem;
-    color: #222;
-  }
-
-  .status-pending {
-    color: #e09e00;
-    font-weight: 700;
-  }
-  .status-accepted {
-    color: #22863a;
-    font-weight: 700;
-  }
-  .status-rejected {
-    color: #d93025;
-    font-weight: 700;
-  }
-
-  /* Scrollbar styling */
-  section::-webkit-scrollbar {
-    width: 6px;
-  }
-  section::-webkit-scrollbar-track {
-    background: #eaeaea;
-    border-radius: 10px;
-  }
-  section::-webkit-scrollbar-thumb {
-    background: #4e54c8;
-    border-radius: 10px;
-  }
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adi's Job Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      color: #2c3e50;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    aside.sidebar {
+      width: 240px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #f0f0f7;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    aside.sidebar h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .profile-pic {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background-image: url('https://i.pravatar.cc/75?img=12');
+      background-size: cover;
+      background-position: center;
+      margin: 0 auto 15px;
+      border: 3px solid #a38de8;
+    }
+    .profile-name {
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 1.15rem;
+    }
+    nav a {
+      display: block;
+      color: #dcd6f7;
+      padding: 12px 18px;
+      margin: 8px 0;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+    nav a.active, nav a:hover {
+      background-color: #a38de8;
+      color: #fff;
+    }
+    main.main-content {
+      flex-grow: 1;
+      background: #fff;
+      padding: 30px 35px;
+      overflow-y: auto;
+    }
+    .dashboard-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+      gap: 25px;
+    }
+    .card {
+      background: linear-gradient(145deg, #f0f4ff, #dbe8ff);
+      border-radius: 16px;
+      padding: 20px 25px;
+      box-shadow: 4px 4px 8px #bcc9f1, -4px -4px 8px #ffffff;
+    }
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+    }
+    .card p {
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
+    .job-list, .application-list {
+      list-style: none;
+      padding: 0;
+    }
+    .job-item, .application-item {
+      background: #f9faff;
+      border: 1px solid #d0d8ea;
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 16px;
+    }
+    .job-header, .application-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .job-title, .application-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .job-company, .application-company {
+      font-size: 1rem;
+      color: #627aad;
+    }
+    .job-location {
+      font-size: 0.9rem;
+      color: #8b9cc3;
+      margin-top: 4px;
+    }
+    .job-description, .application-status {
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+    .apply-btn {
+      margin-top: 18px;
+      background-color: #684de0;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 24px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <main class="dashboard-container" role="main" aria-label="Student Dashboard Jobs and Internships">
-    <header>
-      <h1>Welcome, Student!</h1>
-      <p>Explore Jobs & Internships</p>
-    </header>
-
-    <nav class="tabs" role="tablist" aria-label="Job and Internship Tabs">
-      <button class="tab-btn active" id="tab-jobs" role="tab" aria-selected="true" aria-controls="panel-jobs" tabindex="0">
-        Jobs
-      </button>
-      <button class="tab-btn" id="tab-internships" role="tab" aria-selected="false" aria-controls="panel-internships" tabindex="-1">
-        Internships
-      </button>
+  <aside class="sidebar">
+    <h2>Job Portal</h2>
+    <div class="profile-pic"></div>
+    <div class="profile-name">Adi Kanungo</div>
+    <nav>
+      <a href="#" class="nav-link active" data-section="overview">Overview</a>
+      <a href="#" class="nav-link" data-section="profile">Profile</a>
+      <a href="#" class="nav-link" data-section="applications">Applications</a>
+      <a href="#" class="nav-link" data-section="jobs">Jobs & Internships</a>
     </nav>
+  </aside>
 
-    <section id="panel-jobs" role="tabpanel" aria-labelledby="tab-jobs" tabindex="0">
-      <ul class="listings" id="jobs-list">
-        <!-- Job items added dynamically -->
-      </ul>
-    </section>
+  <main class="main-content">
+    <div id="overview" class="section active">
+      <div class="dashboard-header"><h1>Welcome back, Adi!</h1></div>
+      <section class="cards">
+        <article class="card"><h3>Applications Submitted</h3><p>12</p></article>
+        <article class="card"><h3>Interviews Scheduled</h3><p>3</p></article>
+        <article class="card"><h3>Offers Received</h3><p>2</p></article>
+        <article class="card"><h3>Saved Jobs</h3><p>5</p></article>
+      </section>
+    </div>
 
-    <section id="panel-internships" role="tabpanel" aria-labelledby="tab-internships" tabindex="0" hidden>
-      <ul class="listings" id="internships-list">
-        <!-- Internship items added dynamically -->
-      </ul>
-    </section>
+    <div id="profile" class="section">
+      <div class="dashboard-header"><h1>Your Profile</h1></div>
+      <p>Edit your personal information, resume and preferences here.</p>
+    </div>
 
-    <section class="status-section" aria-label="Application Status Section">
-      <h2>Your Applications</h2>
-      <ul class="application-status" id="application-status-list">
-        <li>No applications yet.</li>
-      </ul>
-    </section>
+    <div id="applications" class="section">
+      <div class="dashboard-header"><h1>Your Applications</h1></div>
+      <ul id="applicationList" class="application-list"></ul>
+    </div>
+
+    <div id="jobs" class="section">
+      <div class="dashboard-header"><h1>Available Jobs & Internships</h1></div>
+      <ul id="jobList" class="job-list"></ul>
+    </div>
   </main>
 
-<script>
-  (function(){
+  <script>
     const jobs = [
-      { id: 'job1', title: 'Frontend Developer', company: 'Tech Solutions Inc.' },
-      { id: 'job2', title: 'Backend Engineer', company: 'Innovatech LLC' },
-      { id: 'job3', title: 'Data Analyst', company: 'DataInsight Corp.' },
-      { id: 'job4', title: 'UI/UX Designer', company: 'Creative Minds Studio' }
+      {
+        title: "Frontend Developer Intern",
+        company: "CodeCrafters Inc",
+        location: "Remote",
+        description: "Build interactive UIs with React.js and TailwindCSS."
+      },
+      {
+        title: "Data Analyst Intern",
+        company: "Insight Labs",
+        location: "Mumbai",
+        description: "Analyze business data and generate reports."
+      },
+      {
+        title: "AI/ML Intern",
+        company: "NeuroSoft",
+        location: "Bangalore",
+        description: "Train machine learning models and work with datasets."
+      },
+      {
+        title: "Product Manager Intern",
+        company: "VisionWare",
+        location: "Pune",
+        description: "Help design and track product development progress."
+      }
     ];
 
-    const internships = [
-      { id: 'intern1', title: 'Marketing Intern', company: 'Bright Media' },
-      { id: 'intern2', title: 'HR Intern', company: 'PeopleFirst' },
-      { id: 'intern3', title: 'Software Intern', company: 'CodeCraft' },
-      { id: 'intern4', title: 'Finance Intern', company: 'Money Matters' }
+    const applications = [
+      {
+        title: "UI/UX Designer Intern",
+        company: "DesignFlow Studio",
+        status: "Offer Received"
+      },
+      {
+        title: "Backend Developer Intern",
+        company: "TechPulse",
+        status: "Rejected"
+      },
+      {
+        title: "Android Developer Intern",
+        company: "MobilityX",
+        status: "Interview Scheduled"
+      },
+      {
+        title: "Marketing Intern",
+        company: "Bright Media",
+        status: "Under Review"
+      }
     ];
 
-    const tabJobsBtn = document.getElementById('tab-jobs');
-    const tabInternshipsBtn = document.getElementById('tab-internships');
-    const jobsPanel = document.getElementById('panel-jobs');
-    const internshipsPanel = document.getElementById('panel-internships');
-    const jobsListEl = document.getElementById('jobs-list');
-    const internshipsListEl = document.getElementById('internships-list');
-
-    const applicationStatusList = document.getElementById('application-status-list');
-
-    let applications = JSON.parse(localStorage.getItem('applications')) || {};
-
-    // Render listings for jobs or internships
-    function renderListings(list, container) {
-      container.innerHTML = '';
-      list.forEach(item => {
-        const li = document.createElement('li');
-        li.setAttribute('data-id', item.id);
-        li.innerHTML = `
-          <div>
-            <div class="title">${item.title}</div>
-            <div class="company">${item.company}</div>
-          </div>
-          <button class="apply-btn" ${applications[item.id] ? 'disabled' : ''}>
-            ${applications[item.id] ? 'Applied' : 'Apply'}
-          </button>
-        `;
-        const applyBtn = li.querySelector('.apply-btn');
-        applyBtn.addEventListener('click', () => applyForPosition(item));
-        container.appendChild(li);
+    function renderJobs() {
+      const jobList = document.getElementById("jobList");
+      jobList.innerHTML = "";
+      jobs.forEach(job => {
+        jobList.innerHTML += `
+          <li class="job-item">
+            <div class="job-header">
+              <span class="job-title">${job.title}</span>
+              <span class="job-company">${job.company}</span>
+            </div>
+            <div class="job-location">${job.location}</div>
+            <div class="job-description">${job.description}</div>
+            <button class="apply-btn">Apply</button>
+          </li>`;
       });
     }
 
-    function applyForPosition(position) {
-      if (applications[position.id]) return; // Already applied
-
-      // Simulate application result randomly: Pending
-      applications[position.id] = {
-        title: position.title,
-        company: position.company,
-        status: 'Pending'
-      };
-
-      saveApplications();
-      refreshUI();
-    }
-
-    function saveApplications() {
-      localStorage.setItem('applications', JSON.stringify(applications));
-    }
-
-    function refreshUI() {
-      renderListings(jobs, jobsListEl);
-      renderListings(internships, internshipsListEl);
-      renderApplicationStatus();
-    }
-
-    function renderApplicationStatus() {
-      applicationStatusList.innerHTML = '';
-
-      let keys = Object.keys(applications);
-      if (keys.length === 0) {
-        applicationStatusList.innerHTML = '<li>No applications yet.</li>';
-        return;
-      }
-
-      keys.forEach(id => {
-        let app = applications[id];
-        let statusClass = '';
-        if (app.status === 'Pending') statusClass = 'status-pending';
-        else if (app.status === 'Accepted') statusClass = 'status-accepted';
-        else if (app.status === 'Rejected') statusClass = 'status-rejected';
-
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${app.title} @ ${app.company}</span>
-          <span class="${statusClass}">${app.status}</span>
-        `;
-        applicationStatusList.appendChild(li);
+    function renderApplications() {
+      const appList = document.getElementById("applicationList");
+      appList.innerHTML = "";
+      applications.forEach(app => {
+        appList.innerHTML += `
+          <li class="application-item">
+            <div class="application-header">
+              <span class="application-title">${app.title}</span>
+              <span class="application-company">${app.company}</span>
+            </div>
+            <div class="application-status">Status: ${app.status}</div>
+          </li>`;
       });
     }
 
-    // Tab switching logic
-    function activateTab(selectedTab) {
-      if(selectedTab === 'jobs') {
-        tabJobsBtn.classList.add('active');
-        tabJobsBtn.setAttribute('aria-selected', 'true');
-        tabJobsBtn.tabIndex = 0;
-        tabInternshipsBtn.classList.remove('active');
-        tabInternshipsBtn.setAttribute('aria-selected', 'false');
-        tabInternshipsBtn.tabIndex = -1;
+    // Navigation functionality
+    const links = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
 
-        jobsPanel.hidden = false;
-        internshipsPanel.hidden = true;
-        jobsPanel.focus();
-      } else {
-        tabInternshipsBtn.classList.add('active');
-        tabInternshipsBtn.setAttribute('aria-selected', 'true');
-        tabInternshipsBtn.tabIndex = 0;
-        tabJobsBtn.classList.remove('active');
-        tabJobsBtn.setAttribute('aria-selected', 'false');
-        tabJobsBtn.tabIndex = -1;
-
-        internshipsPanel.hidden = false;
-        jobsPanel.hidden = true;
-        internshipsPanel.focus();
-      }
-    }
-
-    tabJobsBtn.addEventListener('click', () => activateTab('jobs'));
-    tabInternshipsBtn.addEventListener('click', () => activateTab('internships'));
-
-    // Keyboard navigation for tabs (left and right arrow keys)
-    const tabButtons = [tabJobsBtn, tabInternshipsBtn];
-    tabJobsBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    links.forEach(link => {
+      link.addEventListener('click', e => {
         e.preventDefault();
-        tabInternshipsBtn.focus();
-      }
-    });
-    tabInternshipsBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        tabJobsBtn.focus();
-      }
+        links.forEach(l => l.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        link.classList.add('active');
+        const sectionId = link.getAttribute('data-section');
+        document.getElementById(sectionId).classList.add('active');
+        if (sectionId === "jobs") renderJobs();
+        if (sectionId === "applications") renderApplications();
+      });
     });
 
-    // Initialize
-    refreshUI();
-    activateTab('jobs');
-
-    // For demo purposes: random update statuses every 60 seconds (optional)
-    // You can remove this block if not desired
-    /*
-    setInterval(() => {
-      let changed = false;
-      Object.keys(applications).forEach(id => {
-        if(applications[id].status === 'Pending') {
-          const rand = Math.random();
-          if(rand < 0.3) {
-            applications[id].status = 'Accepted';
-            changed = true;
-          } else if(rand < 0.6) {
-            applications[id].status = 'Rejected';
-            changed = true;
-          }
-        }
-      });
-      if(changed) {
-        saveApplications();
-        renderApplicationStatus();
-      }
-    }, 60000);
-    */
-
-  })();
-</script>
+    // Load jobs/applications initially if needed
+    renderJobs();
+    renderApplications();
+  </script>
 </body>
 </html>
