@@ -1,425 +1,287 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8" />
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-
 <title>Recruiter Login</title>
-
 <style>
-
-  /* Reset */
-
-  * {
-
-    box-sizing: border-box;
-
-  }
-
-  body {
-
-    margin: 0;
-
-    background: #0d1117;
-
-    color: #c9d1d9;
-
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-height: 100vh;
-
-    padding: 15px;
-
-  }
-
-  .container {
-
-    background: #161b22;
-
-    padding: 25px 30px;
-
-    border-radius: 12px;
-
-    width: 100%;
-
-    max-width: 350px;
-
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-
-  }
-
-  h1 {
-
-    text-align: center;
-
-    margin-bottom: 25px;
-
-    font-size: 1.75rem;
-
-    color: #58a6ff;
-
-    letter-spacing: 1px;
-
-  }
-
-  form {
-
-    display: flex;
-
-    flex-direction: column;
-
-  }
-
-  label {
-
-    font-weight: 600;
-
-    font-size: 0.9rem;
-
-    margin-bottom: 6px;
-
-    color: #8b949e;
-
-  }
-
-  input[type="text"],
-
-  input[type="password"],
-
-  input[type="date"],
-
-  input[type="text"].captcha-input {
-
-    padding: 10px 12px;
-
-    border-radius: 6px;
-
-    border: 1.8px solid #30363d;
-
-    background: #0d1117;
-
-    color: #c9d1d9;
-
-    font-size: 1rem;
-
-    margin-bottom: 20px;
-
-    transition: border-color 0.3s ease;
-
-  }
-
-  input[type="text"]:focus,
-
-  input[type="password"]:focus,
-
-  input[type="date"]:focus,
-
-  input[type="text"].captcha-input:focus {
-
-    outline: none;
-
-    border-color: #58a6ff;
-
-    background: #161b22;
-
-  }
-
-  .captcha-row {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-
-  }
-
-  .captcha-box {
-
-    font-weight: 700;
-
-    font-size: 1.2rem;
-
-    letter-spacing: 3px;
-
-    background: #0b0f14;
-
-    border: 2px solid #58a6ff;
-
-    border-radius: 6px;
-
-    padding: 8px 14px;
-
-    user-select: none;
-
-    font-family: monospace;
-
-    color: #58a6ff;
-
-  }
-
-  .refresh-btn {
-
-    background: transparent;
-
-    border: none;
-
-    color: #58a6ff;
-
-    cursor: pointer;
-
-    margin-left: 12px;
-
-    user-select: none;
-
-    font-size: 1.1rem;
-
-    padding: 4px 7px;
-
-    border-radius: 5px;
-
-    transition: background 0.25s ease;
-
-  }
-
-  .refresh-btn:hover {
-
-    background: #2f81f7;
-
-  }
-
-  button[type="submit"] {
-
-    background: #238636;
-
-    border: none;
-
-    color: white;
-
-    font-weight: 700;
-
-    padding: 12px;
-
-    font-size: 1rem;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    transition: background 0.3s ease;
-
-  }
-
-  button[type="submit"]:hover {
-
-    background: #2ea043;
-
-  }
-
-  .error {
-
-    color: #ff6b6b;
-
-    font-size: 0.875rem;
-
-    margin-top: -16px;
-
-    margin-bottom: 16px;
-
-    font-weight: 600;
-
-    display: none;
-
-  }
-
-  @media (max-width: 400px) {
-
+    /* Reset */
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: #2563eb;
+        color: #222;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 15px;
+    }
     .container {
-
-      padding: 20px;
-
-      max-width: 100%;
-
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 350px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        animation: fadeIn 1s ease forwards;
+        color: #222;
+        transform-origin: center bottom;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.75rem;
+        color: #2563eb;
+        letter-spacing: 1px;
+        animation: slideDownFade 1s ease forwards;
+    }
+    form { display: flex; flex-direction: column; }
+    label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        color: #444;
+    }
+    .mandatory {
+        color: #d9534f; /* Red color for the asterisk */
+        font-weight: bold;
+        margin-left: 4px; /* Space between label and asterisk */
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"] {
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1.8px solid #ccc;
+        background: #fafafa;
+        color: #222;
+        font-size: 1rem;
+        margin-bottom: 20px;
+        transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        /* Removed opacity: 0 and animation to ensure visibility*/
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="date"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus {
+        outline: none;
+        border-color: #2563eb;
+        background: #e6f0ff;
+        box-shadow: 0 0 8px 2px rgba(37, 99, 235, 0.6);
+    }
+    button[type="submit"] {
+        background: #2563eb;
+        border: none;
+        color: white;
+        font-weight: 700;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        animation: buttonFadeIn 1s ease forwards;
+        opacity: 0;
+    }
+    button[type="submit"]:hover {
+        background: #1d4fcc;
+        transform: scale(1.05);
+        box-shadow: 0 0 12px rgba(29, 79, 204, 0.8);
+    }
+    .error {
+        color: #d9534f;
+        font-size: 0.875rem;
+        margin-top: -16px;
+        margin-bottom: 16px;
+        font-weight: 600;
+        display: none;
+        animation: errorFadeIn 0.3s ease forwards;
+    }
+    .login-link {
+        margin-top: 18px;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+    .login-link a {
+        color: #2563eb;
+        text-decoration: underline;
     }
 
-  }
+    #captchaBox {
+        font-weight: 700;
+        font-size: 1.2rem;
+        letter-spacing: 3px;
+        background: #e0e7ff;
+        border: 2px solid #2563eb;
+        border-radius: 6px;
+        padding: 8px 14px;
+        user-select: none;
+        font-family: monospace;
+        color: #2563eb;
+        transition: box-shadow 0.3s ease;
+    }
+    #captchaBox.animate-rotate {
+        animation: rotate360 0.6s linear;
+    }
+    .refresh-btn {
+        background: transparent;
+        border: none;
+        color: #2563eb;
+        cursor: pointer;
+        margin-left: 12px;
+        user-select: none;
+        font-size: 1.1rem;
+        padding: 4px 7px;
+        border-radius: 5px;
+        transition: background 0.25s ease, transform 0.4s ease;
+    }
+    .refresh-btn:hover {
+        background: #bbd2ff;
+        transform: scale(1.2);
+    }
 
+    .captcha-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(15px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes slideDownFade {
+        0% { opacity: 0; transform: translateY(-20px);}
+        100% { opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes buttonFadeIn {
+        to {opacity: 1;}
+    }
+    @keyframes errorFadeIn {
+        from {opacity: 0; transform: translateX(-10px);}
+        to {opacity: 1; transform: translateX(0);}
+    }
+    @keyframes rotate360 {
+        from { transform: rotate(0deg);}
+        to { transform: rotate(360deg);}
+    }
+
+    @media (max-width: 400px) {
+        .container { padding: 20px; max-width: 100%; }
+    }
 </style>
-
 </head>
-
 <body>
-
-  <div class="container" role="main" aria-label="Recruiter login form">
-
+<div class="container" role="main" aria-label="Recruiter login form">
     <h1>Recruiter Login</h1>
-
     <form id="loginForm" novalidate>
-
-      <label for="recruiterId">Recruiter ID</label>
-
-      <input type="text" id="recruiterId" name="recruiterId" required autocomplete="username" placeholder="Enter your Recruiter ID" />
-
-
-
-      <label for="regDate">Registration Date</label>
-
-      <input type="date" id="regDate" name="regDate" required max="" />
-
-
-
-      <label for="password">Password</label>
-
-      <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password" />
-
-
-
-      <label for="captchaInput">Captcha</label>
-
-      <div class="captcha-row" aria-live="polite" aria-atomic="true">
-
-        <div id="captchaBox" class="captcha-box" aria-label="Captcha code"></div>
-
-        <button type="button" class="refresh-btn" id="refreshCaptcha" aria-label="Refresh captcha">&#x21bb;</button>
-
-      </div>
-
-      <input
-
-        type="text"
-
-        id="captchaInput"
-
-        name="captchaInput"
-
-        class="captcha-input"
-
-        placeholder="Enter captcha"
-
-        required
-
-        aria-required="true"
-
-        autocomplete="off"
-
-      />
-
-      <div class="error" id="captchaError" role="alert">Captcha does not match.</div>
-
-
-
-      <button type="submit">Login</button>
-
+        <label for="recruiterId">Recruiter ID<span class="mandatory">*</span></label>
+        <input type="text" id="recruiterId" name="recruiterId" required autocomplete="username" placeholder="Enter your Recruiter ID" />
+        
+        <label for="regDate">Registration Date<span class="mandatory">*</span></label>
+        <input type="date" id="regDate" name="regDate" required max="" />
+        
+        <label for="email">Email<span class="mandatory">*</span></label>
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="Enter your email" />
+        
+        <label for="phone">Phone Number<span class="mandatory">*</span></label>
+        <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter your phone number" />
+        
+        <label for="password">Password<span class="mandatory">*</span></label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password" />
+        
+        <label for="captchaInput">Captcha<span class="mandatory">*</span></label>
+        <div class="captcha-row" aria-live="polite" aria-atomic="true">
+          <div id="captchaBox" aria-label="Captcha code"></div>
+          <button type="button" class="refresh-btn" id="refreshCaptcha" aria-label="Refresh captcha">&#x21bb;</button>
+        </div>
+        <input type="text" id="captchaInput" name="captchaInput" class="captcha-input" placeholder="Enter captcha" required aria-required="true" autocomplete="off" />
+        <div class="error" id="captchaError" role="alert">Captcha does not match.</div>
+        
+        <button type="submit">Login</button>
     </form>
-
-  </div>
-
-
-
+    <div class="login-link" style="margin-top: 18px;">
+      <a href="#" >Forgot Password?</a><br/>
+      <a href="RecruiterRegistration.html">New Recruiter? Register here</a>
+    </div>
+</div>
 <script>
-
-  // set max date for Registration Date as today's date
-
+  // Set max date for registration date field to today
   document.getElementById('regDate').max = new Date().toISOString().split('T')[0];
 
-
-
   function generateCaptcha(length = 6) {
-
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // excluded ambiguous chars
-
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let captcha = '';
-
     for (let i = 0; i < length; i++) {
-
       captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-
     }
-
     return captcha;
-
   }
 
-
-
   const captchaBox = document.getElementById('captchaBox');
-
   const captchaInput = document.getElementById('captchaInput');
-
   const refreshBtn = document.getElementById('refreshCaptcha');
-
   const captchaError = document.getElementById('captchaError');
-
-
+  const password = document.getElementById('password');
 
   let currentCaptcha = '';
 
-
-
   function loadCaptcha() {
-
     currentCaptcha = generateCaptcha();
-
     captchaBox.textContent = currentCaptcha;
-
     captchaInput.value = '';
-
     captchaError.style.display = 'none';
-
   }
 
-
-
-  refreshBtn.addEventListener('click', loadCaptcha);
-
-
+  refreshBtn.addEventListener('click', () => {
+    // Animate rotate
+    captchaBox.classList.add('animate-rotate');
+    setTimeout(() => {
+      captchaBox.classList.remove('animate-rotate');
+      loadCaptcha();
+      captchaInput.focus();
+    }, 600);
+  });
 
   loadCaptcha();
 
-
-
   document.getElementById('loginForm').addEventListener('submit', function (e) {
-
     e.preventDefault();
-
     captchaError.style.display = 'none';
 
+    // Captcha validation
     if (captchaInput.value.trim().toUpperCase() !== currentCaptcha) {
-
       captchaError.style.display = 'block';
-
       captchaInput.focus();
-
       return false;
-
     }
 
-    // Form valid and captcha correct, proceed submission (for demo just alert)
+    // Email validation
+    const email = document.getElementById('email').value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return false;
+    }
 
+    // Phone validation
+    const phone = document.getElementById('phone').value.trim();
+    if (!/^\d{10}$/.test(phone)) {
+      alert('Please enter a valid 10-digit phone number.');
+      return false;
+    }
+
+    // If all validations pass
     alert('Login submitted successfully!');
-
     this.reset();
-
     loadCaptcha();
-
   });
-
 </script>
-
 </body>
-
 </html>
