@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel</title>
+  <link rel="shortcut icon" type="X-icon" href="zidio1.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   <style>
     * {
@@ -497,6 +497,10 @@
           <i class="fas fa-cog"></i>
           <span>Settings</span>
         </div>
+        <div class="menu-item" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </div>
       </div>
       
       <div class="user-info">
@@ -552,21 +556,47 @@
             </table>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Add New User</h2>
+            <div class="card-description">Fill in the details to add a new user.</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Name</label>
+              <input type="text" class="input" id="new-user-name" placeholder="Enter user name">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Email</label>
+              <input type="email" class="input" id="new-user-email" placeholder="Enter user email">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Role</label>
+              <select class="input" id="new-user-role">
+                <option value="User">User</option>
+                <option value="Editor">Editor</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+            <div style="text-align: right;">
+              <button class="btn btn-primary" onclick="addNewUser()">Add User</button>
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Content Moderation Section -->
-      <div class="section" id="moderation-section" style="display: none;">
+      <div class="section" id="moderation-section">
         <div class="page-header">
           <h1>Content Moderation</h1>
           <p>Review and moderate user-generated content.</p>
         </div>
-        
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <div class="input-group" style="width: 300px; margin-bottom: 0;">
             <i class="fas fa-search"></i>
             <input type="text" class="input" placeholder="Search content..." id="content-search">
           </div>
-          
           <div class="tabs">
             <div class="tab active" data-filter="all" onclick="filterContent('all')">All</div>
             <div class="tab" data-filter="pending" onclick="filterContent('pending')">Pending</div>
@@ -574,7 +604,6 @@
             <div class="tab" data-filter="rejected" onclick="filterContent('rejected')">Rejected</div>
           </div>
         </div>
-        
         <div class="card">
           <div class="card-header">
             <h2>Content Items</h2>
@@ -599,6 +628,27 @@
             </table>
           </div>
         </div>
+        <div class="card">
+          <div class="card-header">
+            <h2>Blocked Users</h2>
+            <div class="card-description">List of users who have been blocked.</div>
+          </div>
+          <div class="card-body">
+            <table class="table" id="blocked-users-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Join Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Blocked users will be populated via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       
       <!-- Analytics Section -->
@@ -607,52 +657,47 @@
           <h1>Analytics & Reporting</h1>
           <p>Monitor system performance and user activities.</p>
         </div>
-        
         <div class="tabs" style="margin-bottom: 25px;">
           <div class="tab active" data-period="7d" onclick="changePeriod('7d')">7 days</div>
           <div class="tab" data-period="30d" onclick="changePeriod('30d')">30 days</div>
           <div class="tab" data-period="90d" onclick="changePeriod('90d')">90 days</div>
           <span style="margin-left: auto; font-size: 14px; color: #6c757d;">Last updated: Today at 09:00 AM</span>
         </div>
-        
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-header">
               <span>Total Users</span>
               <i class="fas fa-users"></i>
             </div>
-            <div class="stat-value">1,234</div>
+            <div class="stat-value" id="total-users">1,234</div>
             <div class="stat-change positive">
               <i class="fas fa-arrow-up"></i>
               <span>+12.3% from last period</span>
             </div>
           </div>
-          
           <div class="stat-card">
             <div class="stat-header">
-              <span>Content Items</span>
-              <i class="fas fa-file-alt"></i>
+              <span>Approved Users</span>
+              <i class="fas fa-user-check"></i>
             </div>
-            <div class="stat-value">856</div>
+            <div class="stat-value" id="approved-users">0</div>
             <div class="stat-change positive">
               <i class="fas fa-arrow-up"></i>
-              <span>+5.4% from last period</span>
+              <span>Approved</span>
             </div>
           </div>
-          
           <div class="stat-card">
             <div class="stat-header">
-              <span>Moderation Rate</span>
-              <i class="fas fa-shield-alt"></i>
+              <span>Rejected Users</span>
+              <i class="fas fa-user-slash"></i>
             </div>
-            <div class="stat-value">98.2%</div>
-            <div class="stat-change positive">
-              <i class="fas fa-arrow-up"></i>
-              <span>+2.1% from last period</span>
+            <div class="stat-value" id="rejected-users">0</div>
+            <div class="stat-change negative">
+              <i class="fas fa-arrow-down"></i>
+              <span>Rejected</span>
             </div>
           </div>
         </div>
-        
         <div class="card" style="margin-bottom: 25px;">
           <div class="card-header">
             <h2>User Activity</h2>
@@ -664,7 +709,6 @@
             </div>
           </div>
         </div>
-        
         <div class="card" style="margin-bottom: 25px;">
           <div class="card-header">
             <h2>Content Analytics</h2>
@@ -676,7 +720,6 @@
             </div>
           </div>
         </div>
-        
         <div class="card">
           <div class="card-header">
             <h2>User Status Distribution</h2>
@@ -888,6 +931,26 @@
             </div>
           </div>
         </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Update User Information</h2>
+            <div class="card-description">Change your username and password.</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Username</label>
+              <input type="text" class="input" id="username" placeholder="Enter new username">
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Password</label>
+              <input type="password" class="input" id="password" placeholder="Enter new password">
+            </div>
+            <div style="text-align: right;">
+              <button class="btn btn-primary" onclick="updateUserInfo()">Update</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -929,9 +992,13 @@
       // Populate tables
       populateUsersTable();
       populateContentTable();
+      populateBlockedUsersTable();
       
       // Initialize charts
       initCharts();
+      
+      // Update analytics stats
+      updateAnalyticsStats();
       
       // Add event listeners
       document.getElementById('user-search').addEventListener('input', filterUsers);
@@ -1039,6 +1106,22 @@
           </td>
         `;
         
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Populate blocked users table
+    function populateBlockedUsersTable() {
+      const tableBody = document.querySelector('#blocked-users-table tbody');
+      tableBody.innerHTML = '';
+      users.filter(u => u.status === 'blocked').forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>${user.joinDate}</td>
+        `;
         tableBody.appendChild(row);
       });
     }
@@ -1218,6 +1301,7 @@
       }
       
       populateUsersTable();
+      updateAnalyticsStats();
       showToast('User Approved', 'User has been successfully approved.', 'success');
     }
     
@@ -1231,6 +1315,8 @@
       }
       
       populateUsersTable();
+      populateBlockedUsersTable();
+      updateAnalyticsStats();
       showToast('User Blocked', 'User has been blocked from the system.', 'error');
     }
     
@@ -1292,6 +1378,150 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 3000);
+    }
+    
+    // Logout function
+    function logout() {
+      if (confirm('Are you sure you want to log out?')) {
+        window.location.href = 'AdminLogin.html';
+      }
+    }
+
+    // Update user information function
+    function updateUserInfo() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        showToast('Error', 'Both fields are required.', 'error');
+        return;
+      }
+
+      // Simulate a dynamic backend call
+      fetch('/update-user-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to update user information.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          showToast('Success', 'User information updated successfully.', 'success');
+        })
+        .catch(error => {
+          showToast('Error', error.message, 'error');
+        });
+    }
+
+    // Add new user function (advanced)
+    function addNewUser() {
+      const name = document.getElementById('new-user-name').value.trim();
+      const email = document.getElementById('new-user-email').value.trim();
+      const role = document.getElementById('new-user-role').value;
+
+      // Email validation regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!name || !email || !role) {
+        showToast('Error', 'All fields are required.', 'error');
+        return;
+      }
+      if (!emailRegex.test(email)) {
+        showToast('Error', 'Please enter a valid email address.', 'error');
+        return;
+      }
+      // Check for duplicate email
+      if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+        showToast('Error', 'A user with this email already exists.', 'error');
+        return;
+      }
+
+      // Simulate backend call
+      fetch('/add-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, role })
+      })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to add user.');
+          return response.json();
+        })
+        .then(data => {
+          // Add to local users array for UI update
+          users.push({
+            id: Date.now(),
+            name,
+            email,
+            status: 'pending',
+            role,
+            joinDate: new Date().toISOString().slice(0, 10)
+          });
+          populateUsersTable();
+          updateAnalyticsStats();
+          showToast('Success', 'New user added successfully.', 'success');
+          // Reset form
+          document.getElementById('new-user-name').value = '';
+          document.getElementById('new-user-email').value = '';
+          document.getElementById('new-user-role').value = 'User';
+        })
+        .catch(error => {
+          showToast('Error', error.message, 'error');
+        });
+    }
+
+    // Save settings function (advanced)
+    function saveSettings() {
+      const siteName = document.querySelector('input[type="text"][value="Admin Dashboard"]').value;
+      const contactEmail = document.querySelector('input[type="email"][value="admin@example.com"]').value;
+      const timeZone = document.querySelector('select.input').value;
+      const emailNotifications = document.querySelectorAll('input[type="checkbox"]')[0].checked;
+      const allowRegistrations = document.querySelectorAll('input[type="checkbox"]')[1].checked;
+
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(contactEmail)) {
+        showToast('Error', 'Please enter a valid contact email.', 'error');
+        return;
+      }
+
+      // Simulate backend call
+      fetch('/save-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ siteName, contactEmail, timeZone, emailNotifications, allowRegistrations })
+      })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to save settings.');
+          return response.json();
+        })
+        .then(data => {
+          showToast('Success', 'Settings saved successfully.', 'success');
+        })
+        .catch(error => {
+          showToast('Error', error.message, 'error');
+        });
+    }
+
+    // Attach saveSettings to button
+    const saveSettingsBtn = document.querySelector('button.btn.btn-primary');
+    if (saveSettingsBtn && saveSettingsBtn.textContent.includes('Save Settings')) {
+      saveSettingsBtn.onclick = saveSettings;
+    }
+
+    // Update analytics stats dynamically
+    function updateAnalyticsStats() {
+      const total = users.length;
+      const approved = users.filter(u => u.status === 'active').length;
+      const rejected = users.filter(u => u.status === 'blocked').length;
+      document.getElementById('total-users').textContent = total;
+      document.getElementById('approved-users').textContent = approved;
+      document.getElementById('rejected-users').textContent = rejected;
     }
   </script>
 </body>
