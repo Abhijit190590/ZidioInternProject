@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="shortcut icon" type="X-icon" href="zidio1.png">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Recruiter Registration</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap');
+
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #2563eb;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #f0f2f7;
+        overflow-y: auto;
+    }
+    .registration-container {
+        background: linear-gradient(145deg, #ffffff, #e6e9f0);
+        border-radius: 18px;
+        padding: 3rem 4rem;
+        width: 100%;
+        max-width: 520px;
+        box-shadow:
+            0 20px 40px rgba(0,0,0,0.25),
+            inset 0 0 15px rgba(255,255,255,0.7);
+        border: 1px solid #d1d9e6;
+        position: relative;
+        color: #3a3a3a;
+        animation: fadeIn 1s ease forwards;
+    }
+    .registration-container::before {
+        content: "";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 6px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.7);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        color: #2c2c54;
+        letter-spacing: 1.2px;
+        text-shadow: 1px 1px 5px rgba(102, 126, 234, 0.4);
+        animation: fadeIn 1.2s ease forwards;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        animation: fadeIn 1.5s ease forwards;
+    }
+    label {
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+        font-size: 1rem;
+        color: #444;
+        user-select: none;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="url"] {
+        padding: 0.75rem 1.1rem;
+        border-radius: 14px;
+        border: 2px solid #b0b5c1;
+        margin-bottom: 1.3rem;
+        font-size: 1.1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: inset 2px 2px 5px #f0f1f5,
+                    inset -2px -2px 5px #ffffff;
+        background: #f9fafc;
+        font-weight: 500;
+        color: #3b3b50;
+        user-select: text;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="tel"]:focus,
+    input[type="url"]:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow:
+            0 0 10px rgba(102, 126, 234, 0.6),
+            inset 2px 2px 7px #c3c6ea,
+            inset -2px -2px 7px #ffffff;
+        background: #f1f3fc;
+    }
+    .password-note {
+        font-size: 0.85rem;
+        color: #7e7e94;
+        margin-top: -0.9rem;
+        margin-bottom: 1.2rem;
+        font-style: italic;
+        user-select: none;
+    }
+    button {
+        background: linear-gradient(120deg, #667eea, #764ba2);
+        color: white;
+        font-weight: 700;
+        font-size: 1.3rem;
+        padding: 1rem 0;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background 0.4s ease, box-shadow 0.3s ease;
+        box-shadow:
+            0 7px 20px rgba(102, 126, 234, 0.6),
+            0 3px 8px rgba(118, 75, 162, 0.6);
+        user-select: none;
+        letter-spacing: 1px;
+    }
+    button:hover {
+        background: linear-gradient(120deg, #5a67d8, #633da9);
+        box-shadow:
+            0 10px 30px rgba(90, 103, 216, 0.9),
+            0 5px 12px rgba(99, 61, 169, 0.8);
+        transform: translateY(-2px);
+    }
+    button:active {
+        transform: translateY(1px);
+        box-shadow: none;
+    }
+    .error {
+        color: #d9534f;
+        font-size: 0.9rem;
+        margin-top: -1rem;
+        margin-bottom: 1.2rem;
+        font-weight: 700;
+        user-select: none;
+    }
+    .success-message {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 1.2rem 1rem;
+        border-radius: 14px;
+        margin-top: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+        font-size: 1.1rem;
+        box-shadow: 0 5px 15px rgba(21, 87, 36, 0.3);
+        user-select: none;
+        animation: fadeIn 1s ease forwards;
+    }
+    .login-link {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        user-select: none;
+        animation: fadeIn 2s ease forwards;
+    }
+    .login-link a {
+        color: #667eea;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .login-link a:hover,
+    .login-link a:focus {
+        color: #764ba2;
+        text-decoration: underline;
+        outline: none;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(15px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 600px) {
+        .registration-container {
+            padding: 2rem 2.5rem;
+            max-width: 100%;
+            margin: 1rem;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        button {
+            font-size: 1.1rem;
+            padding: 0.85rem 0;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="registration-container" role="main" aria-label="Recruiter Registration Form">
+    <h1>Recruiter Registration</h1>
+    <form id="registrationForm" novalidate>
+        <label for="name">Name <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="text" id="name" name="name" placeholder="First and Last Name" autocomplete="name" required aria-required="true" />
+        <div class="error" id="nameError" role="alert" aria-live="assertive"></div>
+
+        <label for="email">Email <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required aria-required="true" />
+        <div class="error" id="emailError" role="alert" aria-live="assertive"></div>
+
+        <label for="password">Password <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="password" id="password" name="password" placeholder="Enter a strong password" autocomplete="new-password" required aria-required="true" />
+        <div class="password-note">At least 8 characters, including uppercase, lowercase & number</div>
+        <div class="error" id="passwordError" role="alert" aria-live="assertive"></div>
+
+        <label for="confirmPassword">Confirm Password <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter your password" autocomplete="new-password" required aria-required="true" />
+        <div class="error" id="confirmPasswordError" role="alert" aria-live="assertive"></div>
+
+        <label for="company">Company Name <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="text" id="company" name="company" placeholder="Company name" autocomplete="organization" required aria-required="true" />
+        <div class="error" id="companyError" role="alert" aria-live="assertive"></div>
+
+        <label for="location">Location <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="text" id="location" name="location" placeholder="City, State, or Location" autocomplete="address-level2" required aria-required="true" />
+        <div class="error" id="locationError" role="alert" aria-live="assertive"></div>
+
+        <label for="website">Website</label>
+        <input type="url" id="website" name="website" placeholder="https://www.example.com" autocomplete="url" aria-required="false" />
+        <div class="error" id="websiteError" role="alert" aria-live="assertive"></div>
+
+        <label for="phone">Phone Number <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="+1 123 456 7890" pattern="[\+]?[0-9\s\-]+" autocomplete="tel" required aria-required="true" />
+        <div class="error" id="phoneError" role="alert" aria-live="assertive"></div>
+
+        <button type="submit" aria-label="Register">Register</button>
+    </form>
+
+    <div id="successMessage" class="success-message" style="display:none;" role="alert" aria-live="polite"></div>
+
+    <div class="login-link" aria-live="polite">
+        Already have an account? <a href="RecruiterLogin.html" tabindex="0">Login</a>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('registrationForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const companyInput = document.getElementById('company');
+    const locationInput = document.getElementById('location');
+    const websiteInput = document.getElementById('website');
+    const phoneInput = document.getElementById('phone');
+
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+    const companyError = document.getElementById('companyError');
+    const locationError = document.getElementById('locationError');
+    const websiteError = document.getElementById('websiteError');
+    const phoneError = document.getElementById('phoneError');
+
+    const successMessage = document.getElementById('successMessage');
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email.toLowerCase());
+    }
+
+    function validatePassword(password) {
+        const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return re.test(password);
+    }
+
+    function validatePhone(phone) {
+        const re = /^\+?[0-9\s\-]{7,}$/;
+        return re.test(phone);
+    }
+
+    function validateWebsite(url) {
+        try {
+            const parsed = new URL(url);
+            return parsed.protocol === "http:" || parsed.protocol === "https:";
+        } catch {
+            return false;
+        }
+    }
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        let valid = true;
+
+        // Clear previous errors
+        nameError.textContent = '';
+        emailError.textContent = '';
+        passwordError.textContent = '';
+        confirmPasswordError.textContent = '';
+        companyError.textContent = '';
+        locationError.textContent = '';
+        websiteError.textContent = '';
+        phoneError.textContent = '';
+        successMessage.style.display = 'none';
+        successMessage.textContent = '';
+
+        // Validate Name
+        if (!nameInput.value.trim()) {
+            nameError.textContent = 'Name is required.';
+            valid = false;
+        }
+
+        // Validate Email
+        if (!emailInput.value.trim()) {
+            emailError.textContent = 'Email is required.';
+            valid = false;
+        } else if (!validateEmail(emailInput.value.trim())) {
+            emailError.textContent = 'Please enter a valid email address.';
+            valid = false;
+        }
+
+        // Validate Password
+        if (!passwordInput.value) {
+            passwordError.textContent = 'Password is required.';
+            valid = false;
+        } else if (!validatePassword(passwordInput.value)) {
+            passwordError.textContent = 'Password must be at least 8 characters and include uppercase, lowercase, and a number.';
+            valid = false;
+        }
+
+        // Validate Confirm Password
+        if (!confirmPasswordInput.value) {
+            confirmPasswordError.textContent = 'Please confirm your password.';
+            valid = false;
+        } else if (confirmPasswordInput.value !== passwordInput.value) {
+            confirmPasswordError.textContent = 'Passwords do not match.';
+            valid = false;
+        }
+
+        // Company Name
+        if (!companyInput.value.trim()) {
+            companyError.textContent = 'Company name is required.';
+            valid = false;
+        }
+
+        // Location
+        if (!locationInput.value.trim()) {
+            locationError.textContent = 'Location is required.';
+            valid = false;
+        }
+
+        // Website (optional)
+        if (websiteInput.value.trim() && !validateWebsite(websiteInput.value.trim())) {
+            websiteError.textContent = 'Please enter a valid website URL (http or https).';
+            valid = false;
+        }
+
+        // Phone Number
+        if (!phoneInput.value.trim()) {
+            phoneError.textContent = 'Phone number is required.';
+            valid = false;
+        } else if (!validatePhone(phoneInput.value.trim())) {
+            phoneError.textContent = 'Please enter a valid phone number.';
+            valid = false;
+        }
+
+        if (valid) {
+            // Simulate form processing success
+            form.reset();
+            let secondsRemaining = 3;
+            successMessage.style.display = 'block';
+            successMessage.textContent = `Registration successful! Redirecting to login page in ${secondsRemaining} seconds...`;
+            nameInput.focus();
+
+            const countdown = setInterval(() => {
+                secondsRemaining--;
+                if (secondsRemaining > 0) {
+                    successMessage.textContent = `Registration successful! Redirecting to login page in ${secondsRemaining} seconds...`;
+                } else {
+                    clearInterval(countdown);
+                    window.location.href = "RecruiterLogin.html";
+                }
+            }, 1000);
+        }
+    });
+</script>
+</body>
+</html>
