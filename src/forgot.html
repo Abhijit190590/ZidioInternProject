@@ -79,7 +79,7 @@
   <input type="password" id="confirmPassword" placeholder="Confirm password" required />
   <button onclick="resetPassword()">Reset Password</button>
   <div class="message" id="messageBox"></div>
-  <a href="index.html">Back to Login</a>
+  <a href="StudentLogin.html">Back to Login</a>
 </div>
 
 <script>
@@ -113,6 +113,10 @@
     // Simulated password reset
     messageBox.style.color = 'green';
     messageBox.textContent = 'Your password has been reset successfully!';
+
+    setTimeout(() => {
+      window.location.href ='StudentLogin.html';
+    },2000);
   }
 </script>
 
