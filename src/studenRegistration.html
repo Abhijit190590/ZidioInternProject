@@ -2,61 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Student Registration Portal</title>
 <style>
-  /* Reset & base styles */
   *, *::before, *::after {
     box-sizing: border-box;
   }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  html, body {
     margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100%;
+    width: 100%;
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: #f0f0f7;
+  }
+
+  body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    padding: 20px;
   }
+
   .container {
     background: white;
-    max-width: 320px;
-    width: 90vw;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(100, 116, 139, 0.2);
-    padding: 20px 24px;
+    width: 100%;
+    max-width: 700px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 40px 40px;
     color: #2d3748;
+    overflow-y: auto;
+    max-height: 95vh;
   }
+
   h1 {
     text-align: center;
-    margin-bottom: 20px;
-    font-weight: 700;
-    font-size: 1.4rem;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    font-weight: bold;
     color: #3b82f6;
-    user-select: none;
   }
+
   form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
   }
+
   label {
     font-weight: 600;
-    margin-bottom: 4px;
-    display: block;
-    font-size: 0.875rem;
+    font-size: 1rem;
   }
-  /* Flex container for first and last name side by side */
+
   .name-group {
     display: flex;
-    gap: 12px;
+    gap: 16px;
+    flex-wrap: wrap;
   }
+
   .name-group > div {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    min-width: 45%;
   }
+
   input[type="text"],
   input[type="email"],
   input[type="password"],
@@ -64,106 +75,104 @@
   input[type="date"],
   select {
     width: 100%;
-    padding: 8px 10px;
-    font-size: 0.875rem;
-    border-radius: 7px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 8px;
     border: 1.5px solid #cbd5e1;
-    outline-offset: 2px;
     transition: border-color 0.25s ease;
   }
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="password"]:focus,
-  input[type="tel"]:focus,
-  input[type="date"]:focus,
-  select:focus {
+
+  input:focus, select:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 4px rgba(37, 99, 235, 0.5);
+    box-shadow: 0 0 5px rgba(37, 99, 235, 0.5);
+    outline: none;
   }
+
   .radio-group {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     margin-top: 4px;
+    flex-wrap: wrap;
   }
+
   .radio-group label {
     font-weight: 500;
     display: flex;
     align-items: center;
-    cursor: pointer;
-    gap: 5px;
-    font-size: 0.875rem;
+    gap: 6px;
   }
+
   input[type="radio"] {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     accent-color: #3b82f6;
-    cursor: pointer;
   }
+
   button[type="submit"] {
-    margin-top: 10px;
+    margin-top: 20px;
     background-color: #3b82f6;
     color: white;
     font-weight: 700;
-    font-size: 1rem;
-    padding: 10px 0;
-    border-radius: 9px;
+    font-size: 1.1rem;
+    padding: 12px 0;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    user-select: none;
   }
-  button[type="submit"]:hover,
-  button[type="submit"]:focus {
+
+  button[type="submit"]:hover {
     background-color: #2563eb;
   }
-  /* Responsive adjustments */
-  @media (max-width: 350px), (max-height: 600px) {
-    body {
-      padding: 10px 0;
-      height: 600px;
-    }
+
+  @media (max-width: 600px) {
     .container {
-      max-width: 320px;
-      padding: 18px 20px;
+      padding: 24px 20px;
     }
-    h1 {
-      font-size: 1.3rem;
-    }
+
     .name-group {
       flex-direction: column;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    label {
+      font-size: 0.95rem;
     }
   }
 </style>
 </head>
 <body>
-  <section class="container" role="main" aria-labelledby="registerTitle">
-    <h1 id="registerTitle">Student Registration Portal</h1>
+  <section class="container">
+    <h1>Student Registration Portal</h1>
     <form>
       <div class="name-group">
         <div>
           <label for="firstname">First Name</label>
-          <input type="text" id="firstname" name="firstname" placeholder="John" required autocomplete="given-name" />
+          <input type="text" id="firstname" name="firstname" required />
         </div>
         <div>
           <label for="lastname">Last Name</label>
-          <input type="text" id="lastname" name="lastname" placeholder="Doe" required autocomplete="family-name" />
+          <input type="text" id="lastname" name="lastname" required />
         </div>
       </div>
 
       <label for="email">Email Address</label>
-      <input type="email" id="email" name="email" placeholder="john.doe@example.com" required autocomplete="email" />
+      <input type="email" id="email" name="email" required />
 
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Enter password" required autocomplete="new-password" />
+      <input type="password" id="password" name="password" required />
 
       <label for="confirm-password">Confirm Password</label>
-      <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required autocomplete="new-password" />
+      <input type="password" id="confirm-password" name="confirm-password" required />
 
       <label for="dob">Date of Birth</label>
       <input type="date" id="dob" name="dob" required max="2024-12-31" />
 
       <label>Gender</label>
-      <div class="radio-group" role="radiogroup" aria-labelledby="genderLabel">
+      <div class="radio-group">
         <label><input type="radio" name="gender" value="male" required /> Male</label>
         <label><input type="radio" name="gender" value="female" /> Female</label>
         <label><input type="radio" name="gender" value="other" /> Other</label>
@@ -172,27 +181,25 @@
       <label for="course">Select Course</label>
       <select id="course" name="course" required>
         <option value="" disabled selected>Select your course</option>
-        <option value="computer-science">Computer Science</option>
-        <option value="business">Business Administration</option>
-        <option value="engineering">Engineering</option>
-        <option value="arts">Arts & Humanities</option>
-        <option value="science">Natural Sciences</option>
+        <option value="cs">Computer Science</option>
+        <option value="biz">Business</option>
+        <option value="eng">Engineering</option>
+        <option value="art">Arts</option>
+        <option value="sci">Science</option>
       </select>
 
       <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" pattern="^\+?\d{0,15}$" required/>
+      <input type="tel" id="phone" name="phone" pattern="^\+?\d{0,15}$" required placeholder="+1234567890" />
 
       <button type="submit">Register</button>
     </form>
   </section>
   <script>
-    // Password match validation
     const form = document.querySelector('form');
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirm-password');
 
-     form.addEventListener('submit', function(event) {
-      // Check if passwords match
+    form.addEventListener('submit', function(event) {
       if (password.value !== confirmPassword.value) {
         event.preventDefault();
         alert('Passwords do not match!');
@@ -200,7 +207,6 @@
         return false;
       }
 
-      // Mandatory: Validate phone number pattern
       const phone = document.getElementById('phone');
       const phonePattern = /^\+?\d{0,15}$/;
       if (!phonePattern.test(phone.value)) {
@@ -210,7 +216,6 @@
         return false;
       }
 
-      // Validate date of birth is not in the future
       const dob = document.getElementById('dob');
       const today = new Date();
       const dobDate = new Date(dob.value);
@@ -222,13 +227,8 @@
       }
     });
 
-    // Optional: Live password match feedback
-    confirmPassword.addEventListener('input', function() {
-      if (confirmPassword.value !== password.value) {
-        confirmPassword.style.borderColor = 'red';
-      } else {
-        confirmPassword.style.borderColor = '#cbd5e1';
-      }
+    confirmPassword.addEventListener('input', function () {
+      confirmPassword.style.borderColor = confirmPassword.value !== password.value ? 'red' : '#cbd5e1';
     });
   </script>
 </body>
