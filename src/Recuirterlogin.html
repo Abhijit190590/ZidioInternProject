@@ -278,10 +278,8 @@
       return false;
     }
 
-    // If all validations pass
-    alert('Login submitted successfully!');
-    this.reset();
-    loadCaptcha();
+    // If all validations pass, redirect to dashboard
+    window.location.href = 'RecruiterDashboard.html';
   });
 </script>
 </body>
