@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 20px;
+      gap: 40px;
+    }
+
+    .contact-left {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .contact-left h2 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .contact-left p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .contact-info {
+      margin-bottom: 20px;
+    }
+
+    .contact-info i {
+      color: #f26522;
+      margin-right: 10px;
+    }
+
+    .contact-info div {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .contact-right {
+      flex: 1.5;
+      min-width: 300px;
+    }
+
+    .form-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .submit-btn {
+      background: #f26522;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #e05516;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .form-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="contact-left">
+      <h2>Contact Us</h2>
+      <p>Feel free to use the form or drop us an email. Old-fashioned phone calls work too.</p>
+
+      <div class="contact-info">
+        <div><i class="fas fa-phone"></i> 484.324.2400</div>
+        <div><i class="fas fa-envelope"></i> info@mediaproper.com</div>
+        <div><i class="fas fa-map-marker-alt"></i> 15 West 3rd St. <br> Media, Pa. 19063</div>
+      </div>
+    </div>
+
+    <div class="contact-right">
+      <form id="contactForm">
+        <div class="form-group">
+          <div style="flex:1">
+            <label for="first">Name</label>
+            <input type="text" id="first" placeholder="First" required>
+          </div>
+          <div style="flex:1">
+            <label for="last">&nbsp;</label>
+            <input type="text" id="last" placeholder="Last" required>
+          </div>
+        </div>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="example@email.com" required>
+
+        <label for="phone">Phone (optional)</label>
+        <input type="tel" id="phone" placeholder="xxx-xxx-xxxx">
+
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Type your message ..." required></textarea>
+
+        <button type="submit" class="submit-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Your message has been sent. Thank you!");
+      this.reset();
+    });
+  </script>
+
+</body>
+</html>
