@@ -1,289 +1,620 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="shortcut icon" type="X-icon" href="zidio1.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Student Dashboard</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f4f7fd;
+    color: #333;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 250px;
+    background: #2f3e9e;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    transition: width 0.3s ease;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  .sidebar h2 {
+    font-weight: 600;
+    margin-bottom: 2rem;
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .nav-item {
+    cursor: pointer;
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    user-select: none;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background: #3f4ec1;
+  }
+
+  main {
+    flex-grow: 1;
+    padding: 2rem 3rem;
+    background: white;
+    box-shadow: 0 0 15px rgb(0 0 0 / 0.05);
+    border-radius: 8px;
+    margin: 2rem;
+    overflow-y: auto;
+  }
+
+  h1, h3 {
+    margin-top: 0;
+  }
+
+  form label {
+    display: block;
+    font-weight: 600;
+    margin: 0.8rem 0 0.4rem 0;
+  }
+
+  form input[type="text"],
+  form input[type="email"],
+  form textarea,
+  form select {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  form input[type="text"]:focus,
+  form input[type="email"]:focus,
+  form textarea:focus,
+  form select:focus {
+    border-color: #2f3e9e;
+    outline: none;
+  }
+
+  form textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  button {
+    margin-top: 1rem;
+    padding: 0.7rem 1.4rem;
+    background-color: #2f3e9e;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: #4757d0;
+  }
+
+  button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+
+  #logout-btn {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    z-index: 20;
+  }
+
+  /* Resume Section */
+  .resume-info {
+    margin-top: 1rem;
+    font-style: italic;
+    color: #555;
+  }
+
+  /* Jobs & Applications */
+  .job-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .job-item {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background: #fafafa;
+    box-shadow: 2px 2px 6px rgb(0 0 0 / 0.05);
+  }
+
+  .job-item h4 {
+    margin: 0 0 0.4rem 0;
+  }
+
+  .job-item p {
+    font-size: 14px;
+    margin: 0.3rem 0;
+    color: #555;
+  }
+
+  .job-actions {
+    margin-top: 0.8rem;
+  }
+
+  .status-label {
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .status-applied {
+    background-color: #aacbff;
+    color: #1a3a7a;
+  }
+  .status-review {
+    background-color: #ffd97a;
+    color: #664d00;
+  }
+  .status-accepted {
+    background-color: #a2f5a2;
+    color: #1a653a;
+  }
+  .status-rejected {
+    background-color: #f5a2a2;
+    color: #731a1a;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f5f7fa;
-      color: #2c3e50;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-    aside.sidebar {
-      width: 240px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #f0f0f7;
-      display: flex;
       flex-direction: column;
-      padding: 20px;
     }
-    aside.sidebar h2 {
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 30px;
-      text-align: center;
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      padding: 0.5rem 0;
+      overflow-x: auto;
     }
-    .profile-pic {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      background-image: url('https://i.pravatar.cc/75?img=12');
-      background-size: cover;
-      background-position: center;
-      margin: 0 auto 15px;
-      border: 3px solid #a38de8;
-    }
-    .profile-name {
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 1.15rem;
-    }
-    nav a {
-      display: block;
-      color: #dcd6f7;
-      padding: 12px 18px;
-      margin: 8px 0;
-      font-weight: 600;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-    nav a.active, nav a:hover {
-      background-color: #a38de8;
-      color: #fff;
-    }
-    main.main-content {
-      flex-grow: 1;
-      background: #fff;
-      padding: 30px 35px;
-      overflow-y: auto;
-    }
-    .dashboard-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-      gap: 25px;
-    }
-    .card {
-      background: linear-gradient(145deg, #f0f4ff, #dbe8ff);
-      border-radius: 16px;
-      padding: 20px 25px;
-      box-shadow: 4px 4px 8px #bcc9f1, -4px -4px 8px #ffffff;
-    }
-    .card h3 {
-      margin: 0 0 12px;
-      font-size: 1.3rem;
-    }
-    .card p {
-      font-size: 2.2rem;
-      font-weight: 700;
-    }
-    .section {
+    .sidebar h2 {
       display: none;
     }
-    .section.active {
-      display: block;
+    .nav-item {
+      flex: 1;
+      margin: 0 0.2rem;
+      text-align: center;
+      padding: 0.8rem 0.5rem;
+      font-size: 14px;
     }
-    .job-list, .application-list {
-      list-style: none;
-      padding: 0;
+    main {
+      margin: 1rem;
+      padding: 1rem;
     }
-    .job-item, .application-item {
-      background: #f9faff;
-      border: 1px solid #d0d8ea;
-      border-radius: 12px;
-      padding: 20px 25px;
-      margin-bottom: 16px;
-    }
-    .job-header, .application-header {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .job-title, .application-title {
-      font-weight: 700;
-      font-size: 1.2rem;
-    }
-    .job-company, .application-company {
-      font-size: 1rem;
-      color: #627aad;
-    }
-    .job-location {
-      font-size: 0.9rem;
-      color: #8b9cc3;
-      margin-top: 4px;
-    }
-    .job-description, .application-status {
-      margin-top: 12px;
-      font-size: 0.95rem;
-    }
-    .apply-btn {
-      margin-top: 18px;
-      background-color: #684de0;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 24px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-  </style>
+  }
+  .section {
+    display: none;
+  }
+  .section.active {
+    display: block;
+  }
+</style>
 </head>
 <body>
-  <aside class="sidebar">
-    <h2>Job Portal</h2>
-    <div class="profile-pic"></div>
-    <div class="profile-name">Adi Kanungo</div>
-    <nav>
-      <a href="#" class="nav-link active" data-section="overview">Overview</a>
-      <a href="#" class="nav-link" data-section="profile">Profile</a>
-      <a href="#" class="nav-link" data-section="applications">Applications</a>
-      <a href="#" class="nav-link" data-section="jobs">Jobs & Internships</a>
-    </nav>
-  </aside>
-
-  <main class="main-content">
-    <div id="overview" class="section active">
-      <div class="dashboard-header"><h1>Welcome back, Adi!</h1></div>
-      <section class="cards">
-        <article class="card"><h3>Applications Submitted</h3><p>12</p></article>
-        <article class="card"><h3>Interviews Scheduled</h3><p>3</p></article>
-        <article class="card"><h3>Offers Received</h3><p>2</p></article>
-        <article class="card"><h3>Saved Jobs</h3><p>5</p></article>
+  <nav class="sidebar">
+    <h2>Student Dashboard</h2>
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:1.5rem;">
+      <img id="nav-profile-pic" src="https://i.pravatar.cc/75?img=5" alt="Profile Picture" style="width:75px;height:75px;border-radius:50%;object-fit:cover;border:2.5px solid #fff;box-shadow:0 2px 8px #0001;">
+    </div>
+    <div class="nav-item" data-section="overview">Overview</div>
+    <div class="nav-item active" data-section="profile">Profile</div>
+    <div class="nav-item" data-section="jobs">Jobs & Internships</div>
+    <div class="nav-item" data-section="applications">Application Status</div>
+    <button id="logout-btn" style="margin-top: auto; background-color: #d9534f;">Logout</button>
+  </nav>
+  <main>
+    <!-- Overview Section -->
+    <section id="overview-section" class="section" style="display:none; max-height: 80vh; overflow-y: auto;">
+      <h1>Welcome back!</h1>
+      <section class="cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:25px;margin-bottom:2rem;">
+        <article class="card" style="background:linear-gradient(135deg,#e0e7ff,#a5b4fc);border-radius:16px;padding:20px 25px;box-shadow:4px 4px 12px #bcc9f1,-4px -4px 8px #ffffff;">
+          <h3>Applications Submitted</h3>
+          <p id="overview-apps" style="font-size:2.2rem;font-weight:700;">0</p>
+        </article>
+        <article class="card" style="background:linear-gradient(135deg,#fef9c3,#fde68a);border-radius:16px;padding:20px 25px;box-shadow:4px 4px 12px #f7e9b6,-4px -4px 8px #ffffff;">
+          <h3>Interviews Scheduled</h3>
+          <p id="overview-interviews" style="font-size:2.2rem;font-weight:700;">0</p>
+        </article>
+        <article class="card" style="background:linear-gradient(135deg,#bbf7d0,#34d399);border-radius:16px;padding:20px 25px;box-shadow:4px 4px 12px #b6f7d7,-4px -4px 8px #ffffff;">
+          <h3>Offers Received</h3>
+          <p id="overview-offers" style="font-size:2.2rem;font-weight:700;">0</p>
+        </article>
+        <article class="card" style="background:linear-gradient(135deg,#fbcfe8,#f472b6);border-radius:16px;padding:20px 25px;box-shadow:4px 4px 12px #f7b6d7,-4px -4px 8px #ffffff;">
+          <h3>Saved Jobs</h3>
+          <p id="overview-saved" style="font-size:2.2rem;font-weight:700;">0</p>
+        </article>
       </section>
-    </div>
+    </section>
 
-    <div id="profile" class="section">
-      <div class="dashboard-header"><h1>Your Profile</h1></div>
-      <p>Edit your personal information, resume and preferences here.</p>
-    </div>
+    <!-- Profile + Resume Section (Merged) -->
+    <section id="profile-section" class="section active">
+      <h1>Profile Management & Resume</h1>
+      <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;">
+        <img id="profile-pic" src="https://i.pravatar.cc/100?img=5" alt="Profile Picture" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #2f3e9e;" />
+        <div>
+          <label for="profile-pic-upload" style="font-weight:600;">Change Profile Picture</label>
+          <input type="file" id="profile-pic-upload" accept="image/*" style="display:block;margin-top:0.5rem;">
+        </div>
+      </div>
+      <form id="profile-form" autocomplete="off">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name" />
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email" />
+        <label for="education">Education</label>
+        <textarea id="education" name="education" placeholder="Enter your education details"></textarea>
+        <label for="skills">Skills (comma separated)</label>
+        <input type="text" id="skills" name="skills" placeholder="e.g. JavaScript, Python, HTML" />
+        <div style="margin-top:2rem;">
+          <h2 style="margin-bottom:0.5rem;">Resume Upload</h2>
+          <label for="resumeFile">Upload Resume (PDF, DOC, DOCX)</label>
+          <input type="file" id="resumeFile" name="resumeFile" accept=".pdf,.doc,.docx" style="display:block;margin-bottom:0.5rem;" />
+          <button type="button" id="upload-resume-btn" style="margin-bottom:0.5rem;">Upload Resume</button>
+          <div id="resume-info" class="resume-info"></div>
+          <button type="button" id="remove-resume-btn" style="display:none; margin-top:1rem; background-color:#d9534f;">Remove Resume</button>
+        </div>
+        <button type="submit" style="margin-top:2rem;">Save Profile</button>
+      </form>
+      <div id="profile-msg" style="margin-top:1rem; color:green; font-weight:600; display:none;">Profile saved!</div>
+    </section>
 
-    <div id="applications" class="section">
-      <div class="dashboard-header"><h1>Your Applications</h1></div>
-      <ul id="applicationList" class="application-list"></ul>
-    </div>
+    <!-- Jobs & Internships Section -->
+    <section id="jobs-section" class="section" style="display:none; max-height: 80vh; overflow-y: auto;">
+      <h1>Jobs & Internships</h1>
+      <ul id="job-list" class="job-list"></ul>
+      <div id="jobs-msg" style="color:green; font-weight:600; display:none; margin-top:1rem;"></div>
+    </section>
 
-    <div id="jobs" class="section">
-      <div class="dashboard-header"><h1>Available Jobs & Internships</h1></div>
-      <ul id="jobList" class="job-list"></ul>
-    </div>
+    <!-- Application Status Section -->
+    <section id="applications-section" class="section" style="display:none; max-height: 80vh; overflow-y: auto;">
+      <h1>Application Status Tracking</h1>
+      <ul id="application-list" class="job-list"></ul>
+      <div id="applications-msg" style="margin-top:1rem; font-style:italic; color:#555;"></div>
+    </section>
   </main>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = {
+    overview: document.getElementById('overview-section'),
+    profile: document.getElementById('profile-section'),
+    jobs: document.getElementById('jobs-section'),
+    applications: document.getElementById('applications-section'),
+  };
 
-  <script>
-    const jobs = [
-      {
-        title: "Frontend Developer Intern",
-        company: "CodeCrafters Inc",
-        location: "Remote",
-        description: "Build interactive UIs with React.js and TailwindCSS."
-      },
-      {
-        title: "Data Analyst Intern",
-        company: "Insight Labs",
-        location: "Mumbai",
-        description: "Analyze business data and generate reports."
-      },
-      {
-        title: "AI/ML Intern",
-        company: "NeuroSoft",
-        location: "Bangalore",
-        description: "Train machine learning models and work with datasets."
-      },
-      {
-        title: "Product Manager Intern",
-        company: "VisionWare",
-        location: "Pune",
-        description: "Help design and track product development progress."
-      }
-    ];
-
-    const applications = [
-      {
-        title: "UI/UX Designer Intern",
-        company: "DesignFlow Studio",
-        status: "Offer Received"
-      },
-      {
-        title: "Backend Developer Intern",
-        company: "TechPulse",
-        status: "Rejected"
-      },
-      {
-        title: "Android Developer Intern",
-        company: "MobilityX",
-        status: "Interview Scheduled"
-      },
-      {
-        title: "Marketing Intern",
-        company: "Bright Media",
-        status: "Under Review"
-      }
-    ];
-
-    function renderJobs() {
-      const jobList = document.getElementById("jobList");
-      jobList.innerHTML = "";
-      jobs.forEach(job => {
-        jobList.innerHTML += `
-          <li class="job-item">
-            <div class="job-header">
-              <span class="job-title">${job.title}</span>
-              <span class="job-company">${job.company}</span>
-            </div>
-            <div class="job-location">${job.location}</div>
-            <div class="job-description">${job.description}</div>
-            <button class="apply-btn">Apply</button>
-          </li>`;
-      });
+  const switchSection = (sectionName) => {
+    for (const key in sections) {
+      const isActive = key === sectionName;
+      sections[key].style.display = isActive ? 'block' : 'none';
+      sections[key].classList.toggle('active', isActive);
     }
+    navItems.forEach(item =>
+      item.classList.toggle('active', item.dataset.section === sectionName)
+    );
+  };
 
-    function renderApplications() {
-      const appList = document.getElementById("applicationList");
-      appList.innerHTML = "";
-      applications.forEach(app => {
-        appList.innerHTML += `
-          <li class="application-item">
-            <div class="application-header">
-              <span class="application-title">${app.title}</span>
-              <span class="application-company">${app.company}</span>
-            </div>
-            <div class="application-status">Status: ${app.status}</div>
-          </li>`;
-      });
+  navItems.forEach(item =>
+    item.addEventListener('click', () => switchSection(item.dataset.section))
+  );
+
+  const profileForm = document.getElementById('profile-form');
+  const profileMsg = document.getElementById('profile-msg');
+
+  const loadProfile = () => {
+    const profileData = JSON.parse(localStorage.getItem('studentProfile')) || {};
+    profileForm.fullname.value = profileData.fullname || '';
+    profileForm.email.value = profileData.email || '';
+    profileForm.education.value = profileData.education || '';
+    profileForm.skills.value = profileData.skills || '';
+  };
+
+  profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const profileData = {
+      fullname: profileForm.fullname.value.trim(),
+      email: profileForm.email.value.trim(),
+      education: profileForm.education.value.trim(),
+      skills: profileForm.skills.value.trim(),
+    };
+    localStorage.setItem('studentProfile', JSON.stringify(profileData));
+    profileMsg.style.display = 'block';
+    setTimeout(() => (profileMsg.style.display = 'none'), 2500);
+  });
+
+  // Profile picture logic
+  const profilePic = document.getElementById('profile-pic');
+  const navProfilePic = document.getElementById('nav-profile-pic');
+  const profilePicUpload = document.getElementById('profile-pic-upload');
+
+  // Load profile picture from localStorage if available
+  function loadProfilePic() {
+    const picData = localStorage.getItem('studentProfilePic');
+    if (picData) {
+      profilePic.src = picData;
+      navProfilePic.src = picData;
+    } else {
+      profilePic.src = 'https://i.pravatar.cc/100?img=5';
+      navProfilePic.src = 'https://i.pravatar.cc/75?img=5';
     }
+  }
 
-    // Navigation functionality
-    const links = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.section');
+  profilePicUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      profilePic.src = evt.target.result;
+      navProfilePic.src = evt.target.result;
+      localStorage.setItem('studentProfilePic', evt.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
 
-    links.forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        links.forEach(l => l.classList.remove('active'));
-        sections.forEach(s => s.classList.remove('active'));
-        link.classList.add('active');
-        const sectionId = link.getAttribute('data-section');
-        document.getElementById(sectionId).classList.add('active');
-        if (sectionId === "jobs") renderJobs();
-        if (sectionId === "applications") renderApplications();
-      });
+  // Resume logic (now inside profile section)
+  const resumeFileInput = document.getElementById('resumeFile');
+  const resumeInfo = document.getElementById('resume-info');
+  const removeResumeBtn = document.getElementById('remove-resume-btn');
+  const uploadResumeBtn = document.getElementById('upload-resume-btn');
+
+  function loadResume() {
+    const resumeData = JSON.parse(localStorage.getItem('studentResume'));
+    if (resumeData?.name) {
+      resumeInfo.textContent = 'Uploaded resume: ${resumeData.name}';
+      removeResumeBtn.style.display = 'inline-block';
+    } else {
+      resumeInfo.textContent = 'No resume uploaded yet.';
+      removeResumeBtn.style.display = 'none';
+    }
+  }
+
+  uploadResumeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const file = resumeFileInput.files[0];
+    if (!file) return alert('Please select a file to upload.');
+    const resumeData = {
+      name: file.name,
+      type: file.type,
+      lastModified: file.lastModified,
+      size: file.size,
+    };
+    localStorage.setItem('studentResume', JSON.stringify(resumeData));
+    loadResume();
+    resumeFileInput.value = '';
+  });
+
+  removeResumeBtn.addEventListener('click', () => {
+    localStorage.removeItem('studentResume');
+    loadResume();
+  });
+
+  const jobListElem = document.getElementById('job-list');
+  const jobsMsg = document.getElementById('jobs-msg');
+  const applicationListElem = document.getElementById('application-list');
+  const applicationsMsg = document.getElementById('applications-msg');
+
+  let jobsData = JSON.parse(localStorage.getItem('jobsData')) || [
+    {
+      id: 1,
+      title: "Frontend Developer",
+      company: "TechieSoft",
+      location: "Remote",
+      type: "Internship",
+      description: "Work with React and Tailwind on our frontend interface."
+    },
+    {
+      id: 2,
+      title: "Backend Developer",
+      company: "DataWorks",
+      location: "New York",
+      type: "Full-Time",
+      description: "Build APIs with Node.js and manage databases."
+    }
+  ];
+
+  const getApplications = () => JSON.parse(localStorage.getItem('jobApplications')) || [];
+
+  const saveApplications = (applications) =>
+    localStorage.setItem('jobApplications', JSON.stringify(applications));
+
+  const applyToJob = (jobId) => {
+    const applications = getApplications();
+    if (applications.some((a) => a.jobId === jobId)) {
+      return alert('You have already applied for this job.');
+    }
+    applications.push({ jobId, status: 'Applied' });
+    saveApplications(applications);
+    jobsMsg.textContent = 'Application submitted successfully!';
+    setTimeout(() => (jobsMsg.textContent = ''), 3000);
+    reloadAll();
+  };
+
+  // Update overview cards
+  function updateOverview() {
+    const applications = getApplications();
+    document.getElementById('overview-apps').textContent = applications.length;
+    let interviews = 0, offers = 0, saved = 0;
+    applications.forEach(app => {
+      if (app.status === 'Under Review' || app.status === 'Interview Scheduled') interviews++;
+      if (app.status === 'Accepted' || app.status === 'Offer Received') offers++;
     });
+    document.getElementById('overview-interviews').textContent = interviews;
+    document.getElementById('overview-offers').textContent = offers;
+    document.getElementById('overview-saved').textContent = saved;
+  }
 
-    // Load jobs/applications initially if needed
-    renderJobs();
-    renderApplications();
-  </script>
+  const loadJobs = () => {
+    localStorage.setItem('jobsData', JSON.stringify(jobsData));
+    jobListElem.innerHTML = '';
+    const applications = getApplications();
+    jobsData.forEach((job) => {
+      const li = document.createElement('li');
+      li.className = 'job-item';
+      li.innerHTML = `
+        <h4>${job.title}</h4>
+        <p><strong>Company:</strong> ${job.company}</p>
+        <p><strong>Location:</strong> ${job.location}</p>
+        <p><strong>Type:</strong> ${job.type}</p>
+        <p>${job.description}</p>
+      `;
+
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'job-actions';
+      const app = applications.find((a) => a.jobId === job.id);
+      if (app) {
+        const status = document.createElement('span');
+        status.className = 'status-label status-applied';
+        status.textContent = 'Applied';
+        actionsDiv.appendChild(status);
+      } else {
+        const btn = document.createElement('button');
+        btn.textContent = 'Apply';
+        btn.onclick = () => applyToJob(job.id);
+        actionsDiv.appendChild(btn);
+      }
+      li.appendChild(actionsDiv);
+      jobListElem.appendChild(li);
+    });
+  };
+
+  const loadApplications = () => {
+    applicationListElem.innerHTML = '';
+    const applications = getApplications();
+    if (!applications.length) {
+      applicationsMsg.textContent = 'You have not applied to any job or internship yet.';
+      return;
+    }
+    applicationsMsg.textContent = '';
+    applications.forEach((app, i) => {
+      const job = jobsData.find((j) => j.id === app.jobId);
+      const jobTitle = job ? job.title : '(Job Removed)';
+      const jobCompany = job ? job.company : '';
+      const li = document.createElement('li');
+      li.className = 'job-item';
+      li.innerHTML = `
+        <h4>${jobTitle}</h4>
+        <p><strong>Company:</strong> ${jobCompany}</p>
+      `;
+      const statusLabel = document.createElement('span');
+      statusLabel.className = 'status-label';
+      statusLabel.textContent = app.status;
+      const statusClassMap = {
+        'Applied': 'status-applied',
+        'Under Review': 'status-review',
+        'Accepted': 'status-accepted',
+        'Rejected': 'status-rejected',
+      };
+      statusLabel.classList.add(statusClassMap[app.status] || 'status-applied');
+      const p = document.createElement('p');
+      p.textContent = 'Status: ';
+      p.appendChild(statusLabel);
+      // Remove button for application
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = 'Remove Application';
+      removeBtn.style.marginLeft = '1rem';
+      removeBtn.style.background = '#d9534f';
+      removeBtn.style.color = '#fff';
+      removeBtn.style.border = 'none';
+      removeBtn.style.borderRadius = '6px';
+      removeBtn.style.padding = '0.4rem 1rem';
+      removeBtn.style.cursor = 'pointer';
+      removeBtn.onclick = () => {
+        applications.splice(i, 1);
+        saveApplications(applications);
+        reloadAll();
+      };
+      p.appendChild(removeBtn);
+      li.appendChild(p);
+      applicationListElem.appendChild(li);
+    });
+  };
+
+  // Add job form dynamically
+  const addJobForm = document.createElement('form');
+  addJobForm.innerHTML = `
+    <h3>Add New Job</h3>
+    <label>Job Title</label><input type="text" id="new-job-title" required>
+    <label>Company</label><input type="text" id="new-job-company" required>
+    <label>Location</label><input type="text" id="new-job-location" required>
+    <label>Type</label><input type="text" id="new-job-type" required>
+    <label>Description</label><textarea id="new-job-desc" required></textarea>
+    <button type="submit">Add Job</button>
+  `;
+  document.getElementById('jobs-section').appendChild(addJobForm);
+
+  addJobForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const newJob = {
+      id: Date.now(),
+      title: document.getElementById('new-job-title').value.trim(),
+      company: document.getElementById('new-job-company').value.trim(),
+      location: document.getElementById('new-job-location').value.trim(),
+      type: document.getElementById('new-job-type').value.trim(),
+      description: document.getElementById('new-job-desc').value.trim()
+    };
+    jobsData.push(newJob);
+    reloadAll();
+    addJobForm.reset();
+  });
+
+  // Also update overview when applications change
+  function reloadAll() {
+    loadJobs();
+    loadApplications();
+    updateOverview();
+  }
+
+  // Initial load
+  loadProfilePic();
+  loadProfile();
+  loadResume();
+  loadJobs();
+  loadApplications();
+  updateOverview();
+});
+document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.clear();
+    alert('You have been logged out.');
+    location.reload();
+  });
+</script>
 </body>
 </html>
