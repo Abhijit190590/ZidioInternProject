@@ -13,7 +13,7 @@
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #2563eb;
     color: #f0f0f7;
     display: flex;
     justify-content: center;
@@ -21,13 +21,27 @@
     height: 100vh;
   }
   .container {
-    background: white;
-    max-width: 320px;
-    width: 90vw;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(100, 116, 139, 0.2);
-    padding: 20px 24px;
+    margin-top: 270px;
+    background: linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%);
+    max-width: 440px;
+    width: 98vw;
+    border-radius: 22px;
+    box-shadow: 0 12px 36px rgba(37, 99, 235, 0.18), 0 2px 8px #2563eb22;
+    padding: 38px 36px 28px 36px;
     color: #2d3748;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: box-shadow 0.3s, background 0.3s;
+    border: 1.5px solid #3b82f6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .container:hover {
+    box-shadow: 0 20px 48px #2563eb33, 0 2px 8px #2563eb22;
+    background: linear-gradient(135deg, #e0e7ff 60%, #f8fafc 100%);
   }
   h1 {
     text-align: center;
@@ -63,6 +77,8 @@
   input[type="password"],
   input[type="tel"],
   input[type="date"],
+  input[type="url"],
+  textarea,
   select {
     width: 100%;
     padding: 8px 10px;
@@ -77,6 +93,8 @@
   input[type="password"]:focus,
   input[type="tel"]:focus,
   input[type="date"]:focus,
+  input[type="url"]:focus,
+  textarea:focus,
   select:focus {
     border-color: #2563eb;
     box-shadow: 0 0 4px rgba(37, 99, 235, 0.5);
@@ -139,38 +157,38 @@
 <body>
   <section class="container" role="main" aria-labelledby="registerTitle">
     <h1 id="registerTitle">Student Registration Portal</h1>
-    <form>
+    <form id="regForm">
       <div class="name-group">
         <div>
-          <label for="firstname">First Name</label>
+          <label for="firstname">First Name <span style="color:#dc3545;font-weight:bold;">*</span></label>
           <input type="text" id="firstname" name="firstname" placeholder="John" required autocomplete="given-name" />
         </div>
         <div>
-          <label for="lastname">Last Name</label>
+          <label for="lastname">Last Name <span style="color:#dc3545;font-weight:bold;">*</span></label>
           <input type="text" id="lastname" name="lastname" placeholder="Doe" required autocomplete="family-name" />
         </div>
       </div>
 
-      <label for="email">Email Address</label>
+      <label for="email">Email Address <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <input type="email" id="email" name="email" placeholder="john.doe@example.com" required autocomplete="email" />
 
-      <label for="password">Password</label>
+      <label for="password">Password <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <input type="password" id="password" name="password" placeholder="Enter password" required autocomplete="new-password" />
 
-      <label for="confirm-password">Confirm Password</label>
+      <label for="confirm-password">Confirm Password <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required autocomplete="new-password" />
 
-      <label for="dob">Date of Birth</label>
+      <label for="dob">Date of Birth <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <input type="date" id="dob" name="dob" required max="2024-12-31" />
 
-      <label>Gender</label>
+      <label>Gender <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <div class="radio-group" role="radiogroup" aria-labelledby="genderLabel">
         <label><input type="radio" name="gender" value="male" required /> Male</label>
         <label><input type="radio" name="gender" value="female" /> Female</label>
         <label><input type="radio" name="gender" value="other" /> Other</label>
       </div>
 
-      <label for="course">Select Course</label>
+      <label for="course">Select Course <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <select id="course" name="course" required>
         <option value="" disabled selected>Select your course</option>
         <option value="computer-science">Computer Science</option>
@@ -178,13 +196,36 @@
         <option value="engineering">Engineering</option>
         <option value="arts">Arts & Humanities</option>
         <option value="science">Natural Sciences</option>
+        <option value="law">Law</option>
+        <option value="medicine">Medicine</option>
       </select>
 
-      <label for="phone">Phone Number</label>
+      <label for="phone">Phone Number <span style="color:#dc3545;font-weight:bold;">*</span></label>
       <input type="tel" id="phone" name="phone" placeholder="+1 555 123 4567" pattern="^\+?\d{0,15}$" required/>
+
+      <label for="address">Address</label>
+      <input type="text" id="address" name="address" placeholder="123 Main St, City, Country" />
+
+      <label for="linkedin">LinkedIn Profile</label>
+      <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile" />
+
+      <label for="skills">Skills (comma separated)</label>
+      <input type="text" id="skills" name="skills" placeholder="e.g. JavaScript, Python, Design" />
+
+      <label for="about">About Me</label>
+      <textarea id="about" name="about" placeholder="Tell us about yourself..." style="min-height:60px;"></textarea>
 
       <button type="submit">Register</button>
     </form>
+    <div id="success-msg" style="display:none;text-align:center;color:#28a745;font-weight:600;margin-top:12px;">Registration successful!</div>
+    <div id="user-list" style="margin-top:24px;width:100%;"></div>
+    <!-- <div style="text-align:center;margin-top:18px;">
+      <span style="font-size:1.1em;color:#888;">Connect with us:</span><br>
+      <a href="#" title="Facebook" style="margin:0 8px;color:#3b5998;"><i class="fab fa-facebook fa-lg"></i></a>
+      <a href="#" title="Twitter" style="margin:0 8px;color:#1da1f2;"><i class="fab fa-twitter fa-lg"></i></a>
+      <a href="#" title="Instagram" style="margin:0 8px;color:#e1306c;"><i class="fab fa-instagram fa-lg"></i></a>
+      <a href="#" title="LinkedIn" style="margin:0 8px;color:#0077b5;"><i class="fab fa-linkedin fa-lg"></i></a>
+    </div> -->
   </section>
   <script>
     // Password match validation
@@ -192,10 +233,42 @@
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirm-password');
 
-     form.addEventListener('submit', function(event) {
+    // Make registration dynamic: store users in localStorage and show below form
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('studentUsers') || '[]');
+    }
+    function saveUsers(users) {
+      localStorage.setItem('studentUsers', JSON.stringify(users));
+    }
+    function renderUsers() {
+      const users = getUsers();
+      const list = document.getElementById('user-list');
+      if (!users.length) {
+        list.innerHTML = '';
+        return;
+      }
+      let html = '<h3 style="color:#2563eb;text-align:center;margin-bottom:8px;">Registered Students</h3>';
+      html += '<ul style="list-style:none;padding:0;">';
+      users.forEach((u, i) => {
+        html += `<li style="background:#f0f4ff;margin-bottom:8px;padding:10px 14px;border-radius:8px;box-shadow:0 1px 4px #2563eb11;display:flex;justify-content:space-between;align-items:center;">
+          <span><b>${u.firstname} ${u.lastname}</b> <span style='color:#888;font-size:0.9em;'>(${u.email})</span></span>
+          <button onclick="removeUser(${i})" style="background:#dc3545;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;">Remove</button>
+        </li>`;
+      });
+      html += '</ul>';
+      document.getElementById('user-list').innerHTML = html;
+    }
+    function removeUser(idx) {
+      const users = getUsers();
+      users.splice(idx, 1);
+      saveUsers(users);
+      renderUsers();
+    }
+    window.removeUser = removeUser;
+    document.getElementById('regForm').addEventListener('submit', function(event) {
+      event.preventDefault();
       // Check if passwords match
       if (password.value !== confirmPassword.value) {
-        event.preventDefault();
         alert('Passwords do not match!');
         confirmPassword.focus();
         return false;
@@ -205,7 +278,6 @@
       const phone = document.getElementById('phone');
       const phonePattern = /^\+?\d{0,15}$/;
       if (!phonePattern.test(phone.value)) {
-        event.preventDefault();
         alert('Please enter a valid phone number.');
         phone.focus();
         return false;
@@ -216,11 +288,26 @@
       const today = new Date();
       const dobDate = new Date(dob.value);
       if (dobDate > today) {
-        event.preventDefault();
         alert('Date of birth cannot be in the future.');
         dob.focus();
         return false;
       }
+
+      // Save user
+      const user = {
+        firstname: form.firstname.value,
+        lastname: form.lastname.value,
+        email: form.email.value,
+        course: form.course.value,
+        phone: form.phone.value
+      };
+      const users = getUsers();
+      users.push(user);
+      saveUsers(users);
+      form.reset();
+      document.getElementById('success-msg').style.display = 'block';
+      setTimeout(() => document.getElementById('success-msg').style.display = 'none', 2000);
+      renderUsers();
     });
 
     // Optional: Live password match feedback
@@ -231,6 +318,8 @@
         confirmPassword.style.borderColor = '#cbd5e1';
       }
     });
+
+    renderUsers();
   </script>
 </body>
 </html>
