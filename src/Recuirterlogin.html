@@ -195,7 +195,12 @@
         <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter your phone number" />
         
         <label for="password">Password<span class="mandatory">*</span></label>
-        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password" />
+        <div style="position:relative;">
+          <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password" style="padding-right:2.5rem;" />
+          <span id="togglePassword" style="position:absolute;top:50%;right:0.75rem;transform:translateY(-50%);cursor:pointer;color:#2563eb;font-size:1.2rem;">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
         
         <label for="captchaInput">Captcha<span class="mandatory">*</span></label>
         <div class="captcha-row" aria-live="polite" aria-atomic="true">
@@ -212,6 +217,7 @@
       <a href="RecruiterRegistration.html">New Recruiter? Register here</a>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 <script>
   // Set max date for registration date field to today
   document.getElementById('regDate').max = new Date().toISOString().split('T')[0];
@@ -252,6 +258,21 @@
 
   loadCaptcha();
 
+  const togglePassword = document.getElementById('togglePassword');
+  togglePassword.addEventListener('click', function() {
+    const pwd = document.getElementById('password');
+    const icon = this.querySelector('i');
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      pwd.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+
   document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault();
     captchaError.style.display = 'none';
@@ -278,11 +299,10 @@
       return false;
     }
 
-    // If all validations pass
-    alert('Login submitted successfully!');
-    this.reset();
-    loadCaptcha();
+    // If all validations pass, redirect to dashboard
+    window.location.href = 'RecruiterDashboard.html';
   });
 </script>
 </body>
 </html>
+``` 

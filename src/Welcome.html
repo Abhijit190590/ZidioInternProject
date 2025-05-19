@@ -454,10 +454,10 @@
       100% { transform: translateY(0) rotate(360deg); }
     }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <!-- Floating bubbles -->
-  <div class="bubble" style="width: 100px; height: 100px; top: 20%; left: 10%; animation-delay: 0s;"></div>
   <div class="bubble" style="width: 150px; height: 150px; top: 60%; left: 80%; animation-delay: 2s;"></div>
   <div class="bubble" style="width: 80px; height: 80px; top: 30%; left: 70%; animation-delay: 4s;"></div>
   <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 20%; animation-delay: 6s;"></div>
@@ -469,10 +469,10 @@
       <button onclick="location.href='Welcome.html'" class="btn login-btn">Home</button>
       
       <!-- Contact Button -->
-      <button onclick="location.href='contact.html'" class="btn login-btn">Contact</button>
+      <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'});" class="btn login-btn">Contact</button>
       
       <!-- About Button -->
-      <button onclick="location.href='about.html'" class="btn about-btn">About</button>
+      <button onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'});" class="btn about-btn">About</button>
       
       <!-- Login Dropdown -->
       <div class="dropdown">
@@ -546,6 +546,44 @@
         <p class="card-text">Stay updated with workshops, career fairs, networking events, and exciting opportunities.</p>
       </div>
     </div>
+    <!-- About Section -->
+    <section id="about" style="margin:3rem auto 2rem auto;max-width:900px;background:rgba(255,255,255,0.85);border-radius:18px;box-shadow:0 4px 24px #4facfe22;padding:2.5rem 2rem 2rem 2rem;">
+      <h2 style="color:#4facfe;text-align:center;margin-bottom:1rem;">About Us</h2>
+      <p style="color:#333;font-size:1.15rem;text-align:center;line-height:1.7;">
+        <b>Student Recruiter Link</b> is a modern platform designed to bridge the gap between students and recruiters. Our mission is to empower students to discover opportunities, build their professional profiles, and connect with top employers. Recruiters can easily post jobs, manage applications, and find the best talent. We believe in transparency, accessibility, and creating a vibrant community for career growth.
+      </p>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact" style="margin:2rem auto 0 auto;max-width:900px;background:rgba(255,255,255,0.85);border-radius:18px;box-shadow:0 4px 24px #ff6b6b22;padding:2.5rem 2rem 2rem 2rem;">
+      <h2 style="color:#ff6b6b;text-align:center;margin-bottom:1rem;">Contact Us</h2>
+      <p style="color:#333;font-size:1.1rem;text-align:center;">Have questions, feedback, or need support? Reach out to us!</p>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1.2rem;margin-top:1.5rem;">
+        <div style="display:flex;align-items:center;gap:0.7rem;font-size:1.1rem;color:#2563eb;">
+          <i class="fas fa-envelope"></i>
+          <a href="mailto:support@portalaccesshub.com" style="color:#2563eb;text-decoration:underline;">support@portalaccesshub.com</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-size:1.1rem;color:#2563eb;">
+          <i class="fas fa-phone"></i>
+          <span>+1 555 123 4567</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.7rem;font-size:1.1rem;color:#2563eb;">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>123 Main Street, City, Country</span>
+        </div>
+      </div>
+      <!-- Contact Form -->
+      <form style="margin-top:2.5rem;max-width:500px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;gap:1.1rem;">
+        <label for="contact-name" style="font-weight:600;color:#333;">Name <span style="color:#dc3545;font-weight:bold;">*</span></label>
+        <input type="text" id="contact-name" name="contact-name" required placeholder="Your Name" style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;">
+        <label for="contact-email" style="font-weight:600;color:#333;">Email <span style="color:#dc3545;font-weight:bold;">*</span></label>
+        <input type="email" id="contact-email" name="contact-email" required placeholder="you@example.com" style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;">
+        <label for="contact-phone" style="font-weight:600;color:#333;">Phone (optional)</label>
+        <input type="tel" id="contact-phone" name="contact-phone" placeholder="+1 555 123 4567" style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;">
+        <label for="contact-message" style="font-weight:600;color:#333;">Message <span style="color:#dc3545;font-weight:bold;">*</span></label>
+        <textarea id="contact-message" name="contact-message" required placeholder="Type your message here..." style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;min-height:80px;"></textarea>
+        <button type="submit" style="margin-top:0.5rem;background:#ff6b6b;color:#fff;font-weight:700;font-size:1.1rem;padding:0.8rem 0;border-radius:9px;border:none;cursor:pointer;transition:background 0.3s;">Send Message</button>
+      </form>
+    </section>
   </main>
   
   <!-- Footer -->
