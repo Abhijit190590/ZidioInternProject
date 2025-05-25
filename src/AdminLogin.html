@@ -196,15 +196,21 @@
             </div>
             <div>
                 <label for="password">Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    placeholder="Enter Password"
-                    aria-describedby="passwordError"
-                    autocomplete="current-password"
-                />
+                <div style="position:relative;">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        placeholder="Enter Password"
+                        aria-describedby="passwordError"
+                        autocomplete="current-password"
+                        style="padding-right:2.5rem;"
+                    />
+                    <span id="togglePassword" style="position:absolute;top:50%;right:0.75rem;transform:translateY(-50%);cursor:pointer;color:#63b3ed;font-size:1.2rem;">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
                 <p class="error-text" id="passwordError" aria-live="polite"></p>
             </div>
             <div>
@@ -234,6 +240,7 @@
         </form>
     </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 <script>
     (function () {
         const loginForm = document.getElementById("loginForm");
@@ -340,10 +347,25 @@
             generateCaptcha();
         });
 
+        // Password show/hide toggle
+        const togglePassword = document.getElementById('togglePassword');
+        togglePassword.addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            const icon = this.querySelector('i');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                pwd.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
         // Generate captcha initially
         generateCaptcha();
     })();
 </script>
 </body>
 </html>
-
