@@ -126,6 +126,8 @@ body {
     if (userFound) {
       messageBox.style.color = "green";
       messageBox.textContent = "Login successful!";
+      window.location.href = "studentdashboard.html";
+
     } else {
       messageBox.style.color = "red";
       messageBox.textContent = "Invalid Student ID or Password.";
