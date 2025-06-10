@@ -11,4 +11,5 @@ import com.example.ZidioProject_Backend.entity.User;
 
 public interface UserRepository extends JpaRepository{
 	Optional<User> findByEmail(String email);
+	
 }

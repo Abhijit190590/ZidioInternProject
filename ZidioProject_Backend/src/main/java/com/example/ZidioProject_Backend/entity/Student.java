@@ -1,5 +1,6 @@
 package com.example.ZidioProject_Backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,16 +10,26 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="students")
 
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+
+
 public class Student {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	
 	private Long id;
-	private  Long userId;
+	private String name;
 	
-	private String university;
-	private String course;
+	@Column(unique=true)
+	private String email;
+	private String phone;
+		
+	private String college;
+	private String branch;
+	private String passingYear;
 	private String resumeURL;
 	public Long getId() {
 		return id;
@@ -26,23 +37,41 @@ public class Student {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getUserId() {
-		return userId;
+	public String getName() {
+		return name;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getUniversity() {
-		return university;
+	public String getEmail() {
+		return email;
 	}
-	public void setUniversity(String university) {
-		this.university = university;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getCourse() {
-		return course;
+	public String getPhone() {
+		return phone;
 	}
-	public void setCourse(String course) {
-		this.course = course;
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getCollege() {
+		return college;
+	}
+	public void setCollege(String college) {
+		this.college = college;
+	}
+	public String getBranch() {
+		return branch;
+	}
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+	public String getPassingYear() {
+		return passingYear;
+	}
+	public void setPassingYear(String passingYear) {
+		this.passingYear = passingYear;
 	}
 	public String getResumeURL() {
 		return resumeURL;
