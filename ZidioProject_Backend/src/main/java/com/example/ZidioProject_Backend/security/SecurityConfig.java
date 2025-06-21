@@ -5,12 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class SecurityConfig {
+@EnableWebSecurity
+public class SecurityConfig<AuthService> {
 	@Autowired
 	private AuthService authservice;
 	
 	@Bean
-	public SecurityChain securityChain(HttpSecruity http)throws Exception{
+	public <HttpSecurity, SecurityChain> SecurityChain securityChain(HttpSecurity http)throws Exception{
 		http.csrf().
 		disable().
 		authorizeHttpRequest().
