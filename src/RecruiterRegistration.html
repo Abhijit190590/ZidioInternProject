@@ -204,9 +204,14 @@
 <div class="registration-container" role="main" aria-label="Recruiter Registration Form">
     <h1>Recruiter Registration</h1>
     <form id="registrationForm" novalidate>
+
         <label for="name">Name <span aria-hidden="true" style="color:#d9534f;">*</span></label>
         <input type="text" id="name" name="name" placeholder="First and Last Name" autocomplete="name" required aria-required="true" />
         <div class="error" id="nameError" role="alert" aria-live="assertive"></div>
+
+        <label for="recruiterId">RecruiterID <span aria-hidden="true" style="color:#d9534f;">*</span></label>
+        <input type="text" id="recruiterId" name="recruiterId" placeholder="recruiterId" autocomplete="recruiterId" required aria-required="true" />
+        <div class="error" id="recruiterIdError" role="alert" aria-live="assertive"></div>
 
         <label for="email">Email <span aria-hidden="true" style="color:#d9534f;">*</span></label>
         <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required aria-required="true" />
@@ -250,6 +255,7 @@
 <script>
     const form = document.getElementById('registrationForm');
     const nameInput = document.getElementById('name');
+    const recruiterIdInput = document.getElementById('recruiterId');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
@@ -259,6 +265,7 @@
     const phoneInput = document.getElementById('phone');
 
     const nameError = document.getElementById('nameError');
+    const recruiterIdError = document.getElementById('recruiterIdError');
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
     const confirmPasswordError = document.getElementById('confirmPasswordError');
@@ -268,6 +275,7 @@
     const phoneError = document.getElementById('phoneError');
 
     const successMessage = document.getElementById('successMessage');
+
 
     function validateEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -285,6 +293,7 @@
     }
 
     function validateWebsite(url) {
+        if (url.trim() === '') return true; // Optional field
         try {
             const parsed = new URL(url);
             return parsed.protocol === "http:" || parsed.protocol === "https:";
@@ -293,13 +302,14 @@
         }
     }
 
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         let valid = true;
 
         // Clear previous errors
         nameError.textContent = '';
+        recruiterIdError.textContent = '';
         emailError.textContent = '';
         passwordError.textContent = '';
         confirmPasswordError.textContent = '';
@@ -315,6 +325,25 @@
             nameError.textContent = 'Name is required.';
             valid = false;
         }
+
+        // Validate Recruiter ID
+        if (!recruiterIdInput.value.trim()) {
+            recruiterIdError.textContent = 'Recruiter ID is required.';
+            valid = false;
+        } else if (!/^[a-zA-Z]/.test(recruiterIdInput.value)) {
+            recruiterIdError.textContent = 'Recruiter ID must start with a letter.';
+            valid = false;
+        } else if (!/^[a-zA-Z0-9]+$/.test(recruiterIdInput.value)) {
+            recruiterIdError.textContent = 'Recruiter ID can only contain letters and numbers.';
+            valid = false;
+        } else if (recruiterIdInput.value.length < 5) {
+            recruiterIdError.textContent = 'Recruiter ID must be at least 5 characters long.';
+            valid = false;
+        } else if (recruiterIdInput.value.length > 20) {
+            recruiterIdError.textContent = 'Recruiter ID cannot exceed 20 characters.';
+            valid = false;
+        }
+
 
         // Validate Email
         if (!emailInput.value.trim()) {
@@ -343,25 +372,25 @@
             valid = false;
         }
 
-        // Company Name
+        // Validate Company Name
         if (!companyInput.value.trim()) {
             companyError.textContent = 'Company name is required.';
             valid = false;
         }
 
-        // Location
+        // Validate Location
         if (!locationInput.value.trim()) {
             locationError.textContent = 'Location is required.';
             valid = false;
         }
 
-        // Website (optional)
-        if (websiteInput.value.trim() && !validateWebsite(websiteInput.value.trim())) {
+        // Validate Website (optional)
+        if (!validateWebsite(websiteInput.value.trim())) {
             websiteError.textContent = 'Please enter a valid website URL (http or https).';
             valid = false;
         }
 
-        // Phone Number
+        // Validate Phone Number
         if (!phoneInput.value.trim()) {
             phoneError.textContent = 'Phone number is required.';
             valid = false;
@@ -370,25 +399,56 @@
             valid = false;
         }
 
+        // If all validations pass, send data to backend
         if (valid) {
-            // Simulate form processing success
-            form.reset();
-            let secondsRemaining = 3;
-            successMessage.style.display = 'block';
-            successMessage.textContent = `Registration successful! Redirecting to login page in ${secondsRemaining} seconds...`;
-            nameInput.focus();
+            const recruiterData = {
+                name: nameInput.value.trim(),
+                recruiterId: recruiterIdInput.value.trim(),
+                email: emailInput.value.trim(),
+                password: passwordInput.value.trim(),
+                company: companyInput.value.trim(),
+                location: locationInput.value.trim(),
+                website: websiteInput.value.trim(),
+                phone: phoneInput.value.trim()
+            };
 
-            const countdown = setInterval(() => {
-                secondsRemaining--;
-                if (secondsRemaining > 0) {
+            try {
+                const response = await fetch('http://localhost:8081/api/recruiter/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(recruiterData)
+                });
+
+                if (response.ok) {
+                    form.reset();
+                    let secondsRemaining = 3;
+                    successMessage.style.display = 'block';
+                    successMessage.style.color = 'green';
                     successMessage.textContent = `Registration successful! Redirecting to login page in ${secondsRemaining} seconds...`;
+
+                    const countdown = setInterval(() => {
+                        secondsRemaining--;
+                        if (secondsRemaining > 0) {
+                            successMessage.textContent = `Registration successful! Redirecting to login page in ${secondsRemaining} seconds...`;
+                        } else {
+                            clearInterval(countdown);
+                            window.location.href = "Recuirterlogin.html";
+                        }
+                    }, 1000);
                 } else {
-                    clearInterval(countdown);
-                    window.location.href = "Recuirterlogin.html";
+                    const errorData = await response.text();
+                    successMessage.style.display = 'block';
+                    successMessage.style.color = 'red';
+                    successMessage.textContent = 'Error: ' + errorData;
                 }
-            }, 1000);
+            } catch (error) {
+                successMessage.style.display = 'block';
+                successMessage.style.color = 'red';
+                successMessage.textContent = 'Network error: ' + error.message;
+            }
         }
     });
+
 </script>
 </body>
 </html>

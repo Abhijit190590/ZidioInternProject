@@ -325,47 +325,56 @@
             return valid;
         }
 
-        loginForm.addEventListener("submit", function (e) {
+        loginForm.addEventListener("submit", async function (e) {
             e.preventDefault();
             if (validateForm()) {
-                // Check credentials including DOB
-                const dob = new Date(dobInput.value);
-                const expectedDOB = new Date("1990-01-01"); // Example DOB for admin
-                
-                if (empidInput.value === "admin" && 
-                    passwordInput.value === "admin123" && 
-                    dob.getTime() === expectedDOB.getTime()) {
-                    alert("Admin login successful!");
-                    window.location.href = "adminPanel.html";
-                } else {
-                    alert("Invalid credentials. Please check your Employee ID, Password, and DOB.");
+                try {
+                    const response = await fetch("http://localhost:8081/admin/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            username: empidInput.value.trim(),                            
+                            password: passwordInput.value
+                        })
+                    });
+
+                    if (response.ok) {
+                        alert("Admin login successful!");
+                        window.location.href = "adminPanel.html";
+                    } else {
+                        const errorMsg = await response.text();
+                        alert("Login failed: " + errorMsg);
+                        generateCaptcha(); // Refresh captcha on failure
+                    }
+                } catch (error) {
+                    alert("Network error: " + error.message);
+                    generateCaptcha(); // Refresh captcha on error
                 }
             }
         });
 
-        refreshCaptchaBtn.addEventListener("click", function () {
-            generateCaptcha();
-        });
+        refreshCaptchaBtn.addEventListener("click", generateCaptcha);
 
         // Password show/hide toggle
-        const togglePassword = document.getElementById('togglePassword');
-        togglePassword.addEventListener('click', function() {
-            const pwd = document.getElementById('password');
-            const icon = this.querySelector('i');
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
+        const togglePassword = document.getElementById("togglePassword");
+        togglePassword.addEventListener("click", function () {
+            const pwd = document.getElementById("password");
+            const icon = this.querySelector("i");
+            if (pwd.type === "password") {
+                pwd.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
             } else {
-                pwd.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
+                pwd.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
             }
         });
 
         // Generate captcha initially
         generateCaptcha();
-    })();
+})();
+
 </script>
 </body>
 </html>

@@ -185,8 +185,8 @@
         <label for="recruiterId">Recruiter ID<span class="mandatory">*</span></label>
         <input type="text" id="recruiterId" name="recruiterId" required autocomplete="username" placeholder="Enter your Recruiter ID" />
         
-        <label for="regDate">Registration Date<span class="mandatory">*</span></label>
-        <input type="date" id="regDate" name="regDate" required max="" />
+        <!-- <label for="regDate">Registration Date<span class="mandatory">*</span></label>
+        <input type="date" id="regDate" name="regDate" required max="" /> -->
         
         <label for="email">Email<span class="mandatory">*</span></label>
         <input type="email" id="email" name="email" required autocomplete="email" placeholder="Enter your email" />
@@ -219,89 +219,106 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 <script>
-  // Set max date for registration date field to today
-  document.getElementById('regDate').max = new Date().toISOString().split('T')[0];
+ // Set max date for registration date field to today (optional, if needed)
+document.getElementById('regDate') && (document.getElementById('regDate').max = new Date().toISOString().split('T')[0]);
 
-  function generateCaptcha(length = 6) {
+function generateCaptcha(length = 6) {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let captcha = '';
     for (let i = 0; i < length; i++) {
-      captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return captcha;
-  }
+}
 
-  const captchaBox = document.getElementById('captchaBox');
-  const captchaInput = document.getElementById('captchaInput');
-  const refreshBtn = document.getElementById('refreshCaptcha');
-  const captchaError = document.getElementById('captchaError');
-  const password = document.getElementById('password');
+const captchaBox = document.getElementById('captchaBox');
+const captchaInput = document.getElementById('captchaInput');
+const refreshBtn = document.getElementById('refreshCaptcha');
+const captchaError = document.getElementById('captchaError');
 
-  let currentCaptcha = '';
+let currentCaptcha = '';
 
-  function loadCaptcha() {
+function loadCaptcha() {
     currentCaptcha = generateCaptcha();
     captchaBox.textContent = currentCaptcha;
     captchaInput.value = '';
     captchaError.style.display = 'none';
-  }
+}
 
-  refreshBtn.addEventListener('click', () => {
-    // Animate rotate
+refreshBtn.addEventListener('click', () => {
     captchaBox.classList.add('animate-rotate');
     setTimeout(() => {
-      captchaBox.classList.remove('animate-rotate');
-      loadCaptcha();
-      captchaInput.focus();
+        captchaBox.classList.remove('animate-rotate');
+        loadCaptcha();
+        captchaInput.focus();
     }, 600);
-  });
+});
 
-  loadCaptcha();
+loadCaptcha();
 
-  const togglePassword = document.getElementById('togglePassword');
-  togglePassword.addEventListener('click', function() {
+// Show/hide password logic
+const togglePassword = document.getElementById('togglePassword');
+togglePassword.addEventListener('click', function () {
     const pwd = document.getElementById('password');
     const icon = this.querySelector('i');
     if (pwd.type === 'password') {
-      pwd.type = 'text';
-      icon.classList.remove('fa-eye');
-      icon.classList.add('fa-eye-slash');
+        pwd.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
     } else {
-      pwd.type = 'password';
-      icon.classList.remove('fa-eye-slash');
-      icon.classList.add('fa-eye');
+        pwd.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
     }
-  });
+});
 
-  document.getElementById('loginForm').addEventListener('submit', function (e) {
+// Form submission with backend connection
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     captchaError.style.display = 'none';
 
+    const recruiterId = document.getElementById('recruiterId').value.trim();
+    const password = document.getElementById('password').value;
+
     // Captcha validation
     if (captchaInput.value.trim().toUpperCase() !== currentCaptcha) {
-      captchaError.style.display = 'block';
-      captchaInput.focus();
-      return false;
+        captchaError.style.display = 'block';
+        captchaInput.focus();
+        return;
     }
 
-    // Email validation
-    const email = document.getElementById('email').value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Please enter a valid email address.');
-      return false;
+    if (!recruiterId) {
+        alert('Recruiter ID is required.');
+        return;
     }
 
-    // Phone validation
-    const phone = document.getElementById('phone').value.trim();
-    if (!/^\d{10}$/.test(phone)) {
-      alert('Please enter a valid 10-digit phone number.');
-      return false;
+    if (!password) {
+        alert('Password is required.');
+        return;
     }
 
-    // If all validations pass, redirect to dashboard
-    window.location.href = 'RecruiterDashboard.html';
-  });
+    try {
+        const response = await fetch('http://localhost:8081/api/recruiter/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recruiterId, password })
+        });
+
+        const result = await response.text();
+
+        if (result === 'Login successful') {
+            alert('Login successful!');
+            window.location.href = 'RecruiterDashboard.html';
+        } else {
+            alert(result);
+            loadCaptcha(); // Refresh captcha on failure
+        }
+    } catch (error) {
+        alert('Network error: ' + error.message);
+        loadCaptcha(); // Refresh captcha on error
+    }
+});
+
 </script>
 </body>
 </html>
