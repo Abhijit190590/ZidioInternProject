@@ -7,40 +7,45 @@ import com.example.Zproject.dto.StudentLoginRequest;
 import com.example.Zproject.dto.StudentRegistrationRequest;
 import com.example.Zproject.model.Student;
 import com.example.Zproject.repository.StudentRepository;
-import com.sun.jdi.request.ExceptionRequest;
 
 import java.util.Optional;
 
 @Service
 public class StudentService {
-	@Autowired
+
+    @Autowired
     private StudentRepository studentRepository;
 
-    public boolean registerStudent(ExceptionRequest request) {
-        if (studentRepository.findByStudentId(((StudentLoginRequest) request).getStudentId()).isPresent()) {
-            return false; // Student ID already exists
+    public boolean registerStudent(StudentRegistrationRequest request) {
+        
+        // Check if studentId OR email already exists
+        if (studentRepository.findByStudentId(request.getStudentId()).isPresent() 
+            || studentRepository.findByEmail(request.getEmail()).isPresent()) {
+            return false;
         }
+
         Student student = new Student();
-        student.setStudentId(((StudentLoginRequest) request).getStudentId());
-        student.setFirstName(((Student) request).getFirstName());
-        student.setLastName(((Student) request).getLastName());
-        student.setEmail(((Student) request).getEmail());
-        student.setPassword(((StudentLoginRequest) request).getPassword());
-        student.setDob(((Student) request).getDob());
-        student.setGender(((Student) request).getGender());
-        student.setCourse(((Student) request).getCourse());
-        student.setPhone(((Student) request).getPhone());
-        student.setAddress(((Student) request).getAddress());
-        student.setLinkedin(((Student) request).getLinkedin());
-        student.setSkills(((Student) request).getSkills());
-        student.setAbout(((Student) request).getAbout());
+        student.setStudentId(request.getStudentId());
+        student.setFirstName(request.getFirstName());
+        student.setLastName(request.getLastName());
+        student.setEmail(request.getEmail());
+        student.setPassword(request.getPassword());
+        student.setDob(request.getDob());
+        student.setGender(request.getGender());
+        student.setCourse(request.getCourse());
+        student.setPhone(request.getPhone());
+        student.setAddress(request.getAddress());
+        student.setLinkedin(request.getLinkedin());
+        student.setSkills(request.getSkills());
+        student.setAbout(request.getAbout());
 
         studentRepository.save(student);
         return true;
     }
 
     public boolean login(StudentLoginRequest request) {
-        Optional<Student> student = studentRepository.findByStudentIdAndPassword(request.getStudentId(), request.getPassword());
+        Optional<Student> student = studentRepository.findByStudentIdAndPassword(
+                request.getStudentId(), request.getPassword());
         return student.isPresent();
     }
 }

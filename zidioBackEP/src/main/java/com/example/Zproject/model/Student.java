@@ -3,7 +3,10 @@ package com.example.Zproject.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "student")
+@Table(name = "student", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = "studentId"),
+	    @UniqueConstraint(columnNames = "email")
+	})
 //@Data
 public class Student {
 
