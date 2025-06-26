@@ -16,24 +16,24 @@ public class StudentService {
 	@Autowired
     private StudentRepository studentRepository;
 
-    public boolean registerStudent(ExceptionRequest request) {
-        if (studentRepository.findByStudentId(request.getStudentId()).isPresent()) {
+    public boolean registerStudent(StudentRegistrationRequest request) {
+        if (studentRepository.findByStudentId(((StudentLoginRequest) request).getStudentId()).isPresent()) {
             return false; // Student ID already exists
         }
         Student student = new Student();
-        student.setStudentId(request.getStudentId());
-        student.setFirstName(request.getFirstName());
-        student.setLastName(request.getLastName());
-        student.setEmail(request.getEmail());
-        student.setPassword(request.getPassword());
-        student.setDob(request.getDob());
-        student.setGender(request.getGender());
-        student.setCourse(request.getCourse());
-        student.setPhone(request.getPhone());
-        student.setAddress(request.getAddress());
-        student.setLinkedin(request.getLinkedin());
-        student.setSkills(request.getSkills());
-        student.setAbout(request.getAbout());
+        student.setStudentId(((StudentLoginRequest) request).getStudentId());
+        student.setFirstName(((Student) request).getFirstName());
+        student.setLastName(((Student) request).getLastName());
+        student.setEmail(((Student) request).getEmail());
+        student.setPassword(((StudentLoginRequest) request).getPassword());
+        student.setDob(((Student) request).getDob());
+        student.setGender(((Student) request).getGender());
+        student.setCourse(((Student) request).getCourse());
+        student.setPhone(((Student) request).getPhone());
+        student.setAddress(((Student) request).getAddress());
+        student.setLinkedin(((Student) request).getLinkedin());
+        student.setSkills(((Student) request).getSkills());
+        student.setAbout(((Student) request).getAbout());
 
         studentRepository.save(student);
         return true;
