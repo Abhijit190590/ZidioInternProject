@@ -11,18 +11,10 @@ package com.example.Zproject.dto;
 public class RecruiterLoginRequest {
 
 	private String recruiterId;
-    private String email;
+
     private String password;
 
     // Getters & Setters
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
