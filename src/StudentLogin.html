@@ -106,33 +106,35 @@ body {
 </div>
 
 <script>
-   const users = [
-    { username: "student1", password: "abc123" },
-    { username: "student2", password: "pass456" },
-    { username: "student3", password: "mypassword" }
-  ];
-
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
+  document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
+    const studentId = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
     const messageBox = document.getElementById("messageBox");
 
-    const userFound = users.find(user => 
-      user.username === username && user.password === password
-    );
+    try {
+        const response = await fetch('http://localhost:8081/api/student/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId, password })
+});
 
-    if (userFound) {
-      messageBox.style.color = "green";
-      messageBox.textContent = "Login successful!";
-      window.location.href = "studentdashboard.html";
+        const result = await response.text();
 
-    } else {
-      messageBox.style.color = "red";
-      messageBox.textContent = "Invalid Student ID or Password.";
+        if (response.ok && result === "Login successful") {
+            messageBox.style.color = "green";
+            messageBox.textContent = "Login successful!";
+            window.location.href = "studentdashboard.html";
+        } else {
+            messageBox.style.color = "red";
+            messageBox.textContent = result;
+        }
+    } catch (error) {
+        messageBox.style.color = "red";
+        messageBox.textContent = "Network error: " + error.message;
     }
-  });
+});
 </script>
 
 </body>
