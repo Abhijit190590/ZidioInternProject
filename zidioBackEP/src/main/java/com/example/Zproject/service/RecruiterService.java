@@ -22,8 +22,7 @@ public class RecruiterService {
         }
         Recruiter recruiter = new Recruiter();
         recruiter.setRecruiterId(request.getRecruiterId());
-        recruiter.setName(request.getName());
-        recruiter.setCompany(request.getCompany());
+        recruiter.setCompany(request.getCompanyName());
         recruiter.setEmail(request.getEmail());
         recruiter.setPhone(request.getPhone());
         recruiter.setPassword(request.getPassword());

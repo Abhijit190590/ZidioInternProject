@@ -16,7 +16,7 @@ public class StudentService {
 	@Autowired
     private StudentRepository studentRepository;
 
-    public boolean registerStudent(StudentRegistrationRequest request) {
+    public boolean registerStudent(ExceptionRequest request) {
         if (studentRepository.findByStudentId(((StudentLoginRequest) request).getStudentId()).isPresent()) {
             return false; // Student ID already exists
         }

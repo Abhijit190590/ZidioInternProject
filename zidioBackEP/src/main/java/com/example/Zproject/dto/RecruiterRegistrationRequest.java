@@ -16,6 +16,7 @@ package com.example.Zproject.dto;
 
 public class RecruiterRegistrationRequest {
 
+	private String recruiterId;
     private String companyName;
     private String email;
     private String password;
@@ -53,4 +54,14 @@ public class RecruiterRegistrationRequest {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+	public String getRecruiterId() {
+		return recruiterId;
+	}
+
+	public void setRecruiterId(String recruiterId) {
+		this.recruiterId = recruiterId;
+	}
+
+	
 }

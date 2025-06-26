@@ -10,6 +10,7 @@ package com.example.Zproject.dto;
 
 public class RecruiterLoginRequest {
 
+	private String recruiterId;
     private String email;
     private String password;
 
@@ -29,4 +30,13 @@ public class RecruiterLoginRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+	public String getRecruiterId() {
+		return recruiterId;
+	}
+
+	public void setRecruiterId(String recruiterId) {
+		this.recruiterId = recruiterId;
+	}
+
 }
