@@ -1,6 +1,8 @@
 package com.example.Zproject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.Zproject.dto.RecruiterLoginRequest;
@@ -15,8 +17,14 @@ public class RecruiterLoginController {
     private RecruiterService recruiterService;
 
     @PostMapping("/login")
-    public String login(@RequestBody RecruiterLoginRequest request) {
-        boolean success = recruiterService.login(request);
-        return success ? "Login successful" : "Invalid credentials";
+    public ResponseEntity<String> login(@RequestBody RecruiterLoginRequest request) {
+        String result = recruiterService.login(request);
+        
+        if (result.equals("Login successful")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
+
 }

@@ -16,23 +16,40 @@ public class RecruiterService {
     @Autowired
     private RecruiterRepository recruiterRepository;
 
-    public boolean registerRecruiter(RecruiterRegistrationRequest request) {
+    public String registerRecruiter(RecruiterRegistrationRequest request) {
         if (recruiterRepository.findByRecruiterId(request.getRecruiterId()).isPresent()) {
-            return false; // Recruiter ID already exists
+            return "Recruiter ID already exists"; // Recruiter ID already exists
         }
+        if (recruiterRepository.findByEmail(request.getEmail()).isPresent()) {
+            return "Email already exists"; // Email already exists
+        }
+
         Recruiter recruiter = new Recruiter();
+        recruiter.setLocation(request.getLocation());
+        recruiter.setName(request.getName());
         recruiter.setRecruiterId(request.getRecruiterId());
-        recruiter.setCompany(request.getCompanyName());
+        recruiter.setCompany(request.getCompany());
         recruiter.setEmail(request.getEmail());
         recruiter.setPhone(request.getPhone());
         recruiter.setPassword(request.getPassword());
 
         recruiterRepository.save(recruiter);
-        return true;
+        return "success";
     }
 
-    public boolean login(RecruiterLoginRequest request) {
-        Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdAndPassword(request.getRecruiterId(), request.getPassword());
-        return recruiter.isPresent();
+    public String login(RecruiterLoginRequest request) {
+        Optional<Recruiter> recruiterOptional = recruiterRepository.findByRecruiterId(request.getRecruiterId());
+        
+        if (recruiterOptional.isEmpty()) {
+            return "Recruiter ID does not exist";
+        }
+
+        Recruiter recruiter = recruiterOptional.get();
+        
+        if (recruiter.getPassword().equals(request.getPassword())) {
+            return "Login successful";
+        } else {
+            return "Incorrect password";
+        }
     }
 }
