@@ -224,87 +224,89 @@
     <div id="user-list" style="margin-top:24px;width:100%;display:none;"></div>
   </section>
   <script>
-    // Password match validation
-    const form = document.querySelector('form');
-    const password = document.getElementById('password');
-    const confirmPassword = document.getElementById('confirm-password');
+    const form = document.getElementById('regForm');
+const password = document.getElementById('password');
+const confirmPassword = document.getElementById('confirm-password');
 
-    // Make registration dynamic: store users in localStorage and show below form
-    function getUsers() {
-      return JSON.parse(localStorage.getItem('studentUsers') || '[]');
-    }
-    function saveUsers(users) {
-      localStorage.setItem('studentUsers', JSON.stringify(users));
-    }
-    function renderUsers() {
-      const list = document.getElementById('user-list');
-      list.innerHTML = '';
-    }
-    function removeUser(idx) {
-      const users = getUsers();
-      users.splice(idx, 1);
-      saveUsers(users);
-      renderUsers();
-    }
-    window.removeUser = removeUser;
-    document.getElementById('regForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      // Check if passwords match
-      if (password.value !== confirmPassword.value) {
-        alert('Passwords do not match!');
-        confirmPassword.focus();
-        return false;
-      }
+form.addEventListener('submit', async function(event) {
+  event.preventDefault();
 
-      // Mandatory: Validate phone number pattern
-      const phone = document.getElementById('phone');
-      const phonePattern = /^\+?\d{0,15}$/;
-      if (!phonePattern.test(phone.value)) {
-        alert('Please enter a valid phone number.');
-        phone.focus();
-        return false;
-      }
+  if (password.value !== confirmPassword.value) {
+    alert('Passwords do not match!');
+    confirmPassword.focus();
+    return;
+  }
 
-      // Validate date of birth is not in the future
-      const dob = document.getElementById('dob');
-      const today = new Date();
-      const dobDate = new Date(dob.value);
-      if (dobDate > today) {
-        alert('Date of birth cannot be in the future.');
-        dob.focus();
-        return false;
-      }
+  const phone = document.getElementById('phone');
+  const phonePattern = /^\+?\d{0,15}$/;
+  if (!phonePattern.test(phone.value)) {
+    alert('Please enter a valid phone number.');
+    phone.focus();
+    return;
+  }
 
-      // Save user
-      const user = {
-        firstname: form.firstname.value,
-        lastname: form.lastname.value,
-        email: form.email.value,
-        course: form.course.value,
-        phone: form.phone.value
-      };
-      const users = getUsers();
-      users.push(user);
-      saveUsers(users);
+  const dob = document.getElementById('dob');
+  const today = new Date();
+  const dobDate = new Date(dob.value);
+  if (dobDate > today) {
+    alert('Date of birth cannot be in the future.');
+    dob.focus();
+    return;
+  }
+
+  // Get gender
+  const gender = document.querySelector('input[name="gender"]:checked');
+  if (!gender) {
+    alert('Please select your gender.');
+    return;
+  }
+
+  const studentData = {
+    studentId: form.email.value.trim(), // Assuming studentId = email, change if needed
+    firstName: form.firstname.value.trim(),
+    lastName: form.lastname.value.trim(),
+    email: form.email.value.trim(),
+    password: form.password.value.trim(),
+    dob: form.dob.value.trim(),
+    gender: gender.value,
+    course: form.course.value.trim(),
+    phone: form.phone.value.trim(),
+    address: form.address.value.trim(),
+    linkedin: form.linkedin.value.trim(),
+    skills: form.skills.value.trim(),
+    about: form.about.value.trim()
+  };
+
+  try {
+    const response = await fetch('http://localhost:8081/api/student/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(studentData)
+    });
+
+    const result = await response.text();
+
+    if (response.ok) {
+      alert(result);
       form.reset();
       document.getElementById('success-msg').style.display = 'block';
       setTimeout(() => {
         document.getElementById('success-msg').style.display = 'none';
         window.location.href = 'StudentLogin.html';
       }, 1200);
-      renderUsers();
-    });
+    } else {
+      alert('Error: ' + result);
+    }
+  } catch (error) {
+    alert('Network error: ' + error.message);
+  }
+});
 
-    // Optional: Live password match feedback
-    confirmPassword.addEventListener('input', function() {
-      if (confirmPassword.value !== password.value) {
-        confirmPassword.style.borderColor = 'red';
-      } else {
-        confirmPassword.style.borderColor = '#cbd5e1';
-      }
-    });
+confirmPassword.addEventListener('input', function() {
+  confirmPassword.style.borderColor = (confirmPassword.value !== password.value) ? 'red' : '#cbd5e1';
+});
 
-    renderUsers();
+
   </script>
 </body>
 </html>
