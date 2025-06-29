@@ -284,6 +284,7 @@
         <textarea id="education" name="education" placeholder="Enter your education details"></textarea>
         <label for="skills">Skills (comma separated)</label>
         <input type="text" id="skills" name="skills" placeholder="e.g. JavaScript, Python, HTML" />
+
         <div style="margin-top:2rem;">
           <h2 style="margin-bottom:0.5rem;">Resume Upload</h2>
           <label for="resumeFile">Upload Resume (PDF, DOC, DOCX)</label>
@@ -292,6 +293,7 @@
           <div id="resume-info" class="resume-info"></div>
           <button type="button" id="remove-resume-btn" style="display:none; margin-top:1rem; background-color:#d9534f;">Remove Resume</button>
         </div>
+
         <button type="submit" style="margin-top:2rem;">Save Profile</button>
       </form>
       <div id="profile-msg" style="margin-top:1rem; color:green; font-weight:600; display:none;">Profile saved!</div>
@@ -302,6 +304,13 @@
       <h1>Jobs & Internships</h1>
       <ul id="job-list" class="job-list"></ul>
       <div id="jobs-msg" style="color:green; font-weight:600; display:none; margin-top:1rem;"></div>
+
+      <!-- Example custom job listing with instant Apply button -->
+      <div style="border:1.5px solid #007bff;border-radius:7px;margin:1rem 0;padding:1rem;background:#f8f9fa;">
+        <strong>Frontend Developer</strong><br>
+        <span>Company: ABC Pvt Ltd</span><br>
+        <button onclick="applyToJob({ title: 'Frontend Developer', companyName: 'ABC Pvt Ltd' }, this)">Apply</button>
+      </div>
     </section>
 
     <!-- Application Status Section -->
@@ -323,9 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const switchSection = (sectionName) => {
     for (const key in sections) {
-      const isActive = key === sectionName;
-      sections[key].style.display = isActive ? 'block' : 'none';
-      sections[key].classList.toggle('active', isActive);
+      sections[key].style.display = key === sectionName ? 'block' : 'none';
     }
     navItems.forEach(item =>
       item.classList.toggle('active', item.dataset.section === sectionName)
@@ -336,6 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     item.addEventListener('click', () => switchSection(item.dataset.section))
   );
 
+  // Profile Logic
   const profileForm = document.getElementById('profile-form');
   const profileMsg = document.getElementById('profile-msg');
 
@@ -360,28 +368,22 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (profileMsg.style.display = 'none'), 2500);
   });
 
-  // Profile picture logic
+  // Profile Picture Logic
   const profilePic = document.getElementById('profile-pic');
   const navProfilePic = document.getElementById('nav-profile-pic');
   const profilePicUpload = document.getElementById('profile-pic-upload');
 
-  // Load profile picture from localStorage if available
-  function loadProfilePic() {
+  const loadProfilePic = () => {
     const picData = localStorage.getItem('studentProfilePic');
-    if (picData) {
-      profilePic.src = picData;
-      navProfilePic.src = picData;
-    } else {
-      profilePic.src = 'https://i.pravatar.cc/100?img=5';
-      navProfilePic.src = 'https://i.pravatar.cc/75?img=5';
-    }
-  }
+    profilePic.src = picData || 'https://i.pravatar.cc/100?img=5';
+    navProfilePic.src = picData || 'https://i.pravatar.cc/75?img=5';
+  };
 
   profilePicUpload.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = function(evt) {
+    reader.onload = (evt) => {
       profilePic.src = evt.target.result;
       navProfilePic.src = evt.target.result;
       localStorage.setItem('studentProfilePic', evt.target.result);
@@ -389,108 +391,104 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.readAsDataURL(file);
   });
 
-  // Resume logic (now inside profile section)
+  // Resume Logic
   const resumeFileInput = document.getElementById('resumeFile');
   const resumeInfo = document.getElementById('resume-info');
   const removeResumeBtn = document.getElementById('remove-resume-btn');
   const uploadResumeBtn = document.getElementById('upload-resume-btn');
 
-  function loadResume() {
-    const resumeData = JSON.parse(localStorage.getItem('studentResume'));
-    if (resumeData?.name) {
-      resumeInfo.textContent = 'Uploaded resume: ${resumeData.name}';
-      removeResumeBtn.style.display = 'inline-block';
-    } else {
-      resumeInfo.textContent = 'No resume uploaded yet.';
-      removeResumeBtn.style.display = 'none';
+  const loadResume = () => {
+    const studentId = localStorage.getItem('loggedInStudentId');
+    if (!studentId) {
+      alert('Student not logged in.');
+      return;
     }
-  }
+
+    fetch(`http://localhost:8081/api/student/resume/${studentId}`)
+      .then(res => {
+        if (res.ok) return res.json();
+        throw new Error();
+      })
+      .then(resume => {
+        resumeInfo.textContent = `Uploaded Resume: ${resume.fileName}`;
+        removeResumeBtn.style.display = 'inline-block';
+      })
+      .catch(() => {
+        resumeInfo.textContent = 'No resume uploaded yet.';
+        removeResumeBtn.style.display = 'none';
+      });
+  };
 
   uploadResumeBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const file = resumeFileInput.files[0];
     if (!file) return alert('Please select a file to upload.');
-    const resumeData = {
-      name: file.name,
-      type: file.type,
-      lastModified: file.lastModified,
-      size: file.size,
+
+    const studentId = localStorage.getItem('loggedInStudentId');
+    if (!studentId) return alert('Student ID not found. Please login again.');
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      fetch('http://localhost:8081/api/student/resume/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId,
+          fileName: file.name,
+          fileUrl: evt.target.result
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to upload resume.');
+        return res.json();
+      })
+      .then(resume => {
+        resumeInfo.textContent = `Uploaded Resume: ${resume.fileName}`;
+        removeResumeBtn.style.display = 'inline-block';
+        alert('Resume uploaded successfully!');
+      })
+      .catch(err => alert(err.message));
     };
-    localStorage.setItem('studentResume', JSON.stringify(resumeData));
-    loadResume();
-    resumeFileInput.value = '';
+    reader.readAsDataURL(file);
   });
 
   removeResumeBtn.addEventListener('click', () => {
-    localStorage.removeItem('studentResume');
-    loadResume();
+    const studentId = localStorage.getItem('loggedInStudentId');
+    if (!studentId) return alert('Student ID not found. Please login again.');
+
+    fetch(`http://localhost:8081/api/student/resume/${studentId}`, { method: 'DELETE' })
+      .then(res => {
+        if (res.ok) {
+          resumeInfo.textContent = 'No resume uploaded yet.';
+          removeResumeBtn.style.display = 'none';
+          alert('Resume deleted successfully!');
+        } else {
+          alert('Failed to delete resume.');
+        }
+      })
+      .catch(err => alert('Network error: ' + err.message));
   });
 
+  // Jobs and Applications
   const jobListElem = document.getElementById('job-list');
-  const jobsMsg = document.getElementById('jobs-msg');
   const applicationListElem = document.getElementById('application-list');
+  const jobsMsg = document.getElementById('jobs-msg');
   const applicationsMsg = document.getElementById('applications-msg');
 
-  let jobsData = JSON.parse(localStorage.getItem('jobsData')) || [
-    {
-      id: 1,
-      title: "Frontend Developer",
-      company: "TechieSoft",
-      location: "Remote",
-      type: "Internship",
-      description: "Work with React and Tailwind on our frontend interface."
-    },
-    {
-      id: 2,
-      title: "Backend Developer",
-      company: "DataWorks",
-      location: "New York",
-      type: "Full-Time",
-      description: "Build APIs with Node.js and manage databases."
-    }
+  let jobsData = [
+    { id: 1, title: 'Frontend Developer', companyName: 'TechieSoft', location: 'Remote', type: 'Internship', description: 'Work with React and Tailwind.' },
+    { id: 2, title: 'Backend Developer', companyName: 'DataWorks', location: 'New York', type: 'Full-Time', description: 'Build APIs and manage databases.' }
   ];
 
-  const getApplications = () => JSON.parse(localStorage.getItem('jobApplications')) || [];
-
-  const saveApplications = (applications) =>
-    localStorage.setItem('jobApplications', JSON.stringify(applications));
-
-  const applyToJob = (jobId) => {
-    const applications = getApplications();
-    if (applications.some((a) => a.jobId === jobId)) {
-      return alert('You have already applied for this job.');
-    }
-    applications.push({ jobId, status: 'Applied' });
-    saveApplications(applications);
-    jobsMsg.textContent = 'Application submitted successfully!';
-    setTimeout(() => (jobsMsg.textContent = ''), 3000);
-    reloadAll();
-  };
-
-  // Update overview cards
-  function updateOverview() {
-    const applications = getApplications();
-    document.getElementById('overview-apps').textContent = applications.length;
-    let interviews = 0, offers = 0, saved = 0;
-    applications.forEach(app => {
-      if (app.status === 'Under Review' || app.status === 'Interview Scheduled') interviews++;
-      if (app.status === 'Accepted' || app.status === 'Offer Received') offers++;
-    });
-    document.getElementById('overview-interviews').textContent = interviews;
-    document.getElementById('overview-offers').textContent = offers;
-    document.getElementById('overview-saved').textContent = saved;
-  }
-
-  const loadJobs = () => {
-    localStorage.setItem('jobsData', JSON.stringify(jobsData));
+  const loadJobs = (appliedJobs = []) => {
     jobListElem.innerHTML = '';
-    const applications = getApplications();
-    jobsData.forEach((job) => {
+
+    jobsData.forEach(job => {
       const li = document.createElement('li');
       li.className = 'job-item';
       li.innerHTML = `
         <h4>${job.title}</h4>
-        <p><strong>Company:</strong> ${job.company}</p>
+        <p><strong>Company:</strong> ${job.companyName}</p>
         <p><strong>Location:</strong> ${job.location}</p>
         <p><strong>Type:</strong> ${job.type}</p>
         <p>${job.description}</p>
@@ -498,8 +496,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const actionsDiv = document.createElement('div');
       actionsDiv.className = 'job-actions';
-      const app = applications.find((a) => a.jobId === job.id);
-      if (app) {
+      const hasApplied = appliedJobs.some(app => app.jobTitle === job.title && app.companyName === job.companyName);
+
+      if (hasApplied) {
         const status = document.createElement('span');
         status.className = 'status-label status-applied';
         status.textContent = 'Applied';
@@ -507,114 +506,107 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         const btn = document.createElement('button');
         btn.textContent = 'Apply';
-        btn.onclick = () => applyToJob(job.id);
+        btn.onclick = function () { applyToJob(job, btn); };
         actionsDiv.appendChild(btn);
       }
+
       li.appendChild(actionsDiv);
       jobListElem.appendChild(li);
     });
   };
 
   const loadApplications = () => {
+    const studentId = localStorage.getItem('loggedInStudentId');
+    if (!studentId) return;
+
+    fetch(`http://localhost:8081/api/student/application/${studentId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load applications.');
+        return res.json();
+      })
+      .then(applications => {
+        renderApplications(applications);
+        loadJobs(applications);
+        updateOverview(applications);
+      })
+      .catch(err => alert(err.message));
+  };
+
+  const renderApplications = (applications) => {
     applicationListElem.innerHTML = '';
-    const applications = getApplications();
     if (!applications.length) {
-      applicationsMsg.textContent = 'You have not applied to any job or internship yet.';
+      applicationsMsg.textContent = 'You have not applied to any jobs yet.';
       return;
     }
     applicationsMsg.textContent = '';
-    applications.forEach((app, i) => {
-      const job = jobsData.find((j) => j.id === app.jobId);
-      const jobTitle = job ? job.title : '(Job Removed)';
-      const jobCompany = job ? job.company : '';
+
+    applications.forEach(app => {
       const li = document.createElement('li');
       li.className = 'job-item';
       li.innerHTML = `
-        <h4>${jobTitle}</h4>
-        <p><strong>Company:</strong> ${jobCompany}</p>
+        <h4>${app.jobTitle}</h4>
+        <p><strong>Company:</strong> ${app.companyName}</p>
+        <p>Status: <span class="status-label status-applied">Applied</span></p>
       `;
-      const statusLabel = document.createElement('span');
-      statusLabel.className = 'status-label';
-      statusLabel.textContent = app.status;
-      const statusClassMap = {
-        'Applied': 'status-applied',
-        'Under Review': 'status-review',
-        'Accepted': 'status-accepted',
-        'Rejected': 'status-rejected',
-      };
-      statusLabel.classList.add(statusClassMap[app.status] || 'status-applied');
-      const p = document.createElement('p');
-      p.textContent = 'Status: ';
-      p.appendChild(statusLabel);
-      // Remove button for application
-      const removeBtn = document.createElement('button');
-      removeBtn.textContent = 'Remove Application';
-      removeBtn.style.marginLeft = '1rem';
-      removeBtn.style.background = '#d9534f';
-      removeBtn.style.color = '#fff';
-      removeBtn.style.border = 'none';
-      removeBtn.style.borderRadius = '6px';
-      removeBtn.style.padding = '0.4rem 1rem';
-      removeBtn.style.cursor = 'pointer';
-      removeBtn.onclick = () => {
-        applications.splice(i, 1);
-        saveApplications(applications);
-        reloadAll();
-      };
-      p.appendChild(removeBtn);
-      li.appendChild(p);
       applicationListElem.appendChild(li);
     });
   };
 
-  // Add job form dynamically
-  const addJobForm = document.createElement('form');
-  addJobForm.innerHTML = `
-    <h3>Add New Job</h3>
-    <label>Job Title</label><input type="text" id="new-job-title" required>
-    <label>Company</label><input type="text" id="new-job-company" required>
-    <label>Location</label><input type="text" id="new-job-location" required>
-    <label>Type</label><input type="text" id="new-job-type" required>
-    <label>Description</label><textarea id="new-job-desc" required></textarea>
-    <button type="submit">Add Job</button>
-  `;
-  document.getElementById('jobs-section').appendChild(addJobForm);
+  const applyToJob = (job, buttonElement) => {
+    const studentId = localStorage.getItem('loggedInStudentId');
+    if (!studentId) return alert('Student not logged in.');
+    if (!job || !job.title || !job.companyName) return alert('Job details are missing.');
 
-  addJobForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const newJob = {
-      id: Date.now(),
-      title: document.getElementById('new-job-title').value.trim(),
-      company: document.getElementById('new-job-company').value.trim(),
-      location: document.getElementById('new-job-location').value.trim(),
-      type: document.getElementById('new-job-type').value.trim(),
-      description: document.getElementById('new-job-desc').value.trim()
-    };
-    jobsData.push(newJob);
-    reloadAll();
-    addJobForm.reset();
-  });
+    fetch('http://localhost:8081/api/student/application/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        studentId,
+        jobTitle: job.title,
+        companyName: job.companyName
+      })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to apply for job.');
+      return res.json();
+    })
+    .then(() => {
+      alert('Application submitted successfully!');
+      buttonElement.textContent = "Applied";
+      buttonElement.disabled = true;
+      buttonElement.style.backgroundColor = "#6c757d";
+      buttonElement.style.cursor = "default";
+      loadApplications();
+    })
+    .catch(err => alert(err.message));
+  };
 
-  // Also update overview when applications change
-  function reloadAll() {
-    loadJobs();
+  const updateOverview = (applications) => {
+    document.getElementById('overview-apps').textContent = applications.length;
+    document.getElementById('overview-interviews').textContent = '0';
+    document.getElementById('overview-offers').textContent = '0';
+    document.getElementById('overview-saved').textContent = '0';
+  };
+
+  const reloadAll = () => {
+    loadProfilePic();
+    loadProfile();
+    loadResume();
     loadApplications();
-    updateOverview();
-  }
+  };
 
   // Initial load
-  loadProfilePic();
-  loadProfile();
-  loadResume();
-  loadJobs();
-  loadApplications();
-  updateOverview();
+  reloadAll();
 });
+
+// Logout
 document.getElementById('logout-btn').addEventListener('click', () => {
-    localStorage.clear();
-    alert('You have been logged out.');
-    window.location.href ="StudentLogin.html";
-  });
+  localStorage.clear();
+  alert('You have been logged out.');
+  window.location.href = "StudentLogin.html";
+});
+
+
 </script>
 </body>
 </html>

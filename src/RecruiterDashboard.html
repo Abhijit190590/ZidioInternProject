@@ -171,20 +171,8 @@
     </div>
 
     <script>
-        // --- Advanced Recruiter Dashboard Features ---
-        // 1. Job Management (Add, Edit, Delete, List)
-        // 2. Application Filtering & Search
-        // 3. Notes & Ratings for Applicants
-        // 4. Export Applications (CSV)
-        // 5. Interview Scheduling (Mock)
-        // 6. Persistent State (localStorage)
-        // 7. Responsive UI Enhancements
-        // 8. Toast Notifications
-        // 9. Theme Switcher (Light/Dark)
-        // 10. Help Modal
-
-        // --- Theme Switcher ---
-        (function() {
+      // Theme Switcher (kept unchanged)
+      (function () {
           const themeBtn = document.createElement('button');
           themeBtn.textContent = '🌙';
           themeBtn.title = 'Toggle Light/Dark Theme';
@@ -202,334 +190,202 @@
           themeBtn.style.cursor = 'pointer';
           document.body.appendChild(themeBtn);
           function setTheme(dark) {
-            document.body.style.background = dark ? '#181a1b' : '#e9ecef';
-            document.body.style.color = dark ? '#f1f1f1' : '#333';
-            themeBtn.textContent = dark ? '☀️' : '🌙';
-            localStorage.setItem('recruiterTheme', dark ? 'dark' : 'light');
+              document.body.style.background = dark ? '#181a1b' : '#e9ecef';
+              document.body.style.color = dark ? '#f1f1f1' : '#333';
+              themeBtn.textContent = dark ? '☀️' : '🌙';
+              localStorage.setItem('recruiterTheme', dark ? 'dark' : 'light');
           }
           themeBtn.onclick = () => setTheme(document.body.style.background !== 'rgb(24, 26, 27)');
           if (localStorage.getItem('recruiterTheme') === 'dark') setTheme(true);
-        })();
+      })();
 
-        // --- Toast Notification ---
-        function showToast(msg, color = '#007bff') {
+      // Toast Notification
+      function showToast(msg, color = '#007bff') {
           let toast = document.getElementById('toast-msg');
           if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'toast-msg';
-            toast.style.position = 'fixed';
-            toast.style.bottom = '30px';
-            toast.style.right = '30px';
-            toast.style.background = color;
-            toast.style.color = '#fff';
-            toast.style.padding = '1rem 2rem';
-            toast.style.borderRadius = '8px';
-            toast.style.fontWeight = 'bold';
-            toast.style.zIndex = '9999';
-            toast.style.boxShadow = '0 4px 16px #0002';
-            document.body.appendChild(toast);
+              toast = document.createElement('div');
+              toast.id = 'toast-msg';
+              toast.style.position = 'fixed';
+              toast.style.bottom = '30px';
+              toast.style.right = '30px';
+              toast.style.background = color;
+              toast.style.color = '#fff';
+              toast.style.padding = '1rem 2rem';
+              toast.style.borderRadius = '8px';
+              toast.style.fontWeight = 'bold';
+              toast.style.zIndex = '9999';
+              toast.style.boxShadow = '0 4px 16px #0002';
+              document.body.appendChild(toast);
           }
           toast.textContent = msg;
           toast.style.display = 'block';
           setTimeout(() => { toast.style.display = 'none'; }, 2500);
-        }
+      }
 
-        // --- Job Management ---
-        let jobs = JSON.parse(localStorage.getItem('recruiterJobs')) || [
-          { id: 1, title: 'Frontend Developer', description: 'React, CSS, UI/UX', posted: new Date().toLocaleDateString() },
-          { id: 2, title: 'Backend Developer', description: 'Node.js, API, DB', posted: new Date().toLocaleDateString() }
-        ];
-        function saveJobs() { localStorage.setItem('recruiterJobs', JSON.stringify(jobs)); }
-        function renderJobs() {
-          const jobSection = document.querySelector('.job-listings');
-          let jobList = document.getElementById('job-list');
-          if (!jobList) {
-            jobList = document.createElement('div');
-            jobList.id = 'job-list';
-            jobSection.appendChild(jobList);
-          }
-          jobList.innerHTML = '';
-          jobs.forEach(job => {
-            const jobDiv = document.createElement('div');
-            jobDiv.style.border = '1.5px solid #007bff';
-            jobDiv.style.borderRadius = '7px';
-            jobDiv.style.margin = '1rem 0';
-            jobDiv.style.padding = '1rem';
-            jobDiv.style.background = '#f8f9fa';
-            jobDiv.innerHTML = `
-              <strong>${job.title}</strong> <span style="color:#888;font-size:0.9em;">(Posted: ${job.posted})</span><br>
-              <span>${job.description}</span><br>
-              <button class="button edit-job" style="background:#ffc107;color:#333;">Edit</button>
-              <button class="button delete-job" style="background:#dc3545;">Delete</button>
-            `;
-            const [editBtn, delBtn] = jobDiv.querySelectorAll('button');
-            editBtn.onclick = () => editJob(job.id);
-            delBtn.onclick = () => {
-              if (confirm('Delete this job?')) {
-                jobs = jobs.filter(j => j.id !== job.id);
-                saveJobs();
-                renderJobs();
-                showToast('Job deleted', '#dc3545');
-              }
-            };
-            jobList.appendChild(jobDiv);
-          });
-        }
-        function editJob(id) {
-          const job = jobs.find(j => j.id === id);
-          if (!job) return;
+      // --- Job Management ---
+      function renderJobs() {
+          fetch('/api/recruiter/jobs')
+              .then(res => res.json())
+              .then(jobs => {
+                  const jobSection = document.querySelector('.job-listings');
+                  let jobList = document.getElementById('job-list');
+                  if (!jobList) {
+                      jobList = document.createElement('div');
+                      jobList.id = 'job-list';
+                      jobSection.appendChild(jobList);
+                  }
+                  jobList.innerHTML = '';
+                  jobs.forEach(job => {
+                      const jobDiv = document.createElement('div');
+                      jobDiv.style.border = '1.5px solid #007bff';
+                      jobDiv.style.borderRadius = '7px';
+                      jobDiv.style.margin = '1rem 0';
+                      jobDiv.style.padding = '1rem';
+                      jobDiv.style.background = '#f8f9fa';
+                      jobDiv.innerHTML = `
+                          <strong>${job.title}</strong> <span style="color:#888;font-size:0.9em;">(Posted: ${job.posted})</span><br>
+                          <span>${job.description}</span><br>
+                          <button class="button edit-job" style="background:#ffc107;color:#333;">Edit</button>
+                          <button class="button delete-job" style="background:#dc3545;">Delete</button>
+                      `;
+                      const [editBtn, delBtn] = jobDiv.querySelectorAll('button');
+                      editBtn.onclick = () => editJob(job);
+                      delBtn.onclick = () => deleteJob(job.id);
+                      jobList.appendChild(jobDiv);
+                  });
+              });
+      }
+
+      function addJob(title, description) {
+          fetch('/api/recruiter/jobs', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ title, description })
+          })
+              .then(res => res.json())
+              .then(() => {
+                  renderJobs();
+                  showToast('Job Posted!', '#007bff');
+              });
+      }
+
+      function editJob(job) {
           document.getElementById('jobTitle').value = job.title;
           document.getElementById('jobDescription').value = job.description;
           showToast('Edit the fields and submit to update job', '#ffc107');
-          document.getElementById('jobForm').onsubmit = function(e) {
-            e.preventDefault();
-            job.title = document.getElementById('jobTitle').value;
-            job.description = document.getElementById('jobDescription').value;
-            job.posted = new Date().toLocaleDateString();
-            saveJobs();
-            renderJobs();
-            showToast('Job updated!', '#28a745');
-            this.reset();
-            this.onsubmit = defaultJobSubmit;
+          document.getElementById('jobForm').onsubmit = function (e) {
+              e.preventDefault();
+              const title = document.getElementById('jobTitle').value;
+              const description = document.getElementById('jobDescription').value;
+              fetch(`/api/recruiter/jobs/${job.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ title, description })
+              })
+                  .then(res => res.json())
+                  .then(() => {
+                      renderJobs();
+                      showToast('Job Updated!', '#28a745');
+                      this.reset();
+                      this.onsubmit = defaultJobSubmit;
+                  });
           };
-        }
-        function defaultJobSubmit(e) {
-          e.preventDefault();
-          const jobTitle = document.getElementById('jobTitle').value;
-          const jobDescription = document.getElementById('jobDescription').value;
-          jobs.push({ id: Date.now(), title: jobTitle, description: jobDescription, posted: new Date().toLocaleDateString() });
-          saveJobs();
-          renderJobs();
-          showToast('Job Posted!', '#007bff');
-          this.reset();
-        }
-        document.getElementById('jobForm').onsubmit = defaultJobSubmit;
-        renderJobs();
+      }
 
-        // --- Application Filtering & Search ---
-        const filterDiv = document.createElement('div');
-        filterDiv.style.margin = '1rem 0';
-        filterDiv.innerHTML = `
-          <input id="search-applicant" type="text" placeholder="Search by name/email..." style="padding:0.5rem 1rem;border-radius:5px;border:1.5px solid #007bff;width:220px;">
-          <select id="filter-status" style="padding:0.5rem 1rem;border-radius:5px;border:1.5px solid #007bff;margin-left:1rem;">
-            <option value="">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Shortlisted">Shortlisted</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        `;
-        document.querySelector('.applications').insertBefore(filterDiv, document.getElementById('applications-list'));
-        document.getElementById('search-applicant').oninput = renderApplications;
-        document.getElementById('filter-status').onchange = renderApplications;
-
-        // --- Notes & Ratings for Applicants ---
-        function getNotes(idx) {
-          return localStorage.getItem('appNote_' + idx) || '';
-        }
-        function setNotes(idx, note) {
-          localStorage.setItem('appNote_' + idx, note);
-        }
-        function getRating(idx) {
-          return localStorage.getItem('appRating_' + idx) || 0;
-        }
-        function setRating(idx, rating) {
-          localStorage.setItem('appRating_' + idx, rating);
-        }
-
-        // --- Export Applications to CSV ---
-        function exportCSV() {
-          let csv = 'Name,Email,Status,Note,Rating\n';
-          applications.forEach((app, idx) => {
-            const note = getNotes(idx).replace(/\n/g, ' ');
-            const rating = getRating(idx);
-            csv += `${app.name},${app.email},${app.status},${note},${rating}\n`;
-          });
-          const blob = new Blob([csv], { type: 'text/csv' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'applications.csv';
-          a.click();
-          URL.revokeObjectURL(url);
-          showToast('Exported to CSV!', '#007bff');
-        }
-        const exportBtn = document.createElement('button');
-        exportBtn.textContent = 'Export CSV';
-        exportBtn.className = 'button';
-        exportBtn.style.background = '#17a2b8';
-        exportBtn.style.margin = '0 0 1rem 1rem';
-        exportBtn.onclick = exportCSV;
-        document.querySelector('.applications').insertBefore(exportBtn, document.getElementById('applications-list'));
-
-        // --- Interview Scheduling (Mock) ---
-        function scheduleInterview(idx) {
-          const date = prompt('Enter interview date (YYYY-MM-DD):');
-          if (date) {
-            localStorage.setItem('appInterview_' + idx, date);
-            showToast('Interview scheduled for ' + date, '#28a745');
-            renderApplications();
+      function deleteJob(id) {
+          if (confirm('Delete this job?')) {
+              fetch(`/api/recruiter/jobs/${id}`, { method: 'DELETE' })
+                  .then(() => {
+                      renderJobs();
+                      showToast('Job Deleted!', '#dc3545');
+                  });
           }
-        }
-        function getInterview(idx) {
-          return localStorage.getItem('appInterview_' + idx) || '';
-        }
+      }
 
-        // --- Help Modal ---
-        const helpBtn = document.createElement('button');
-        helpBtn.textContent = 'Help';
-        helpBtn.className = 'button';
-        helpBtn.style.background = '#ffc107';
-        helpBtn.style.margin = '0 0 1rem 1rem';
-        helpBtn.onclick = function() {
-          alert('Features:\n- Add/Edit/Delete Jobs\n- Filter/Search Applications\n- Shortlist/Reject/Remove\n- Notes & Ratings\n- Export CSV\n- Interview Scheduling\n- Theme Switcher (top right)');
-        };
-        document.querySelector('.applications').insertBefore(helpBtn, document.getElementById('applications-list'));
+      function defaultJobSubmit(e) {
+          e.preventDefault();
+          const title = document.getElementById('jobTitle').value;
+          const description = document.getElementById('jobDescription').value;
+          addJob(title, description);
+          this.reset();
+      }
 
-        // --- Enhanced renderApplications ---
-        function renderApplications() {
-          const list = document.getElementById('applications-list');
-          list.innerHTML = '';
+      document.getElementById('jobForm').onsubmit = defaultJobSubmit;
+      renderJobs();
+
+      // --- Applications ---
+      function renderApplications() {
           const search = document.getElementById('search-applicant').value.toLowerCase();
           const status = document.getElementById('filter-status').value;
-          applications.forEach((app, idx) => {
-            if ((search && !(`${app.name} ${app.email}`.toLowerCase().includes(search))) || (status && app.status !== status)) return;
-            const div = document.createElement('div');
-            div.className = 'application';
-            div.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.25)';
-            div.style.background = 'linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%)';
-            div.style.border = '2.5px solid #007bff';
-            div.style.transition = 'box-shadow 0.4s, border 0.4s, background 0.4s';
-            div.onmouseover = function() {
-              div.style.boxShadow = '0 16px 48px 0 rgba(31, 38, 135, 0.35)';
-              div.style.background = 'linear-gradient(135deg, #e0e7ff 60%, #f8fafc 100%)';
-              div.style.border = '2.5px solid #28a745';
-            };
-            div.onmouseout = function() {
-              div.style.boxShadow = '0 8px 32px 0 rgba(31, 38, 135, 0.25)';
-              div.style.background = 'linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%)';
-              div.style.border = '2.5px solid #007bff';
-            };
-            div.innerHTML = `
-              <div>
-                <strong>${app.name}</strong><br>
-                <span>Email: ${app.email}</span><br>
-                <span>Resume: <a href="${app.resume}" target="_blank">Download</a></span><br>
-                <span>Status: <span style="font-weight:bold; color:${app.status==='Shortlisted'?'#28a745':app.status==='Rejected'?'#dc3545':app.status==='Pending'?'#007bff':'#6c757d'}">${app.status}</span></span><br>
-                <span>Interview: <span style="color:#17a2b8;">${getInterview(idx) ? getInterview(idx) : 'Not scheduled'}</span></span>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end;">
-                <button class="button shortlist" type="button" ${app.status==='Shortlisted'?'disabled':''} style="box-shadow:0 2px 8px #28a74555;font-weight:bold;letter-spacing:1px;">Shortlist</button>
-                <button class="button reject" type="button" ${app.status==='Rejected'?'disabled':''} style="box-shadow:0 2px 8px #dc354555;font-weight:bold;letter-spacing:1px;">Reject</button>
-                <button class="button" type="button" style="background:#6c757d;box-shadow:0 2px 8px #6c757d55;font-weight:bold;letter-spacing:1px;" title="Remove Application">Remove</button>
-                <button class="button" type="button" style="background:#17a2b8;" title="Schedule Interview">Schedule Interview</button>
-                <textarea placeholder="Add notes..." style="width:180px;min-height:40px;border-radius:5px;border:1.5px solid #007bff;resize:vertical;">${getNotes(idx)}</textarea>
-                <div style="margin-top:0.3rem;">Rating: <span id="rating-${idx}" style="color:#ffc107;font-size:1.2em;cursor:pointer;">${'★'.repeat(getRating(idx))}${'☆'.repeat(5-getRating(idx))}</span></div>
-              </div>
-            `;
-            // Button actions
-            const [shortBtn, rejectBtn, removeBtn, interviewBtn] = div.querySelectorAll('button');
-            if (shortBtn) shortBtn.onclick = () => {
-              if(applications[idx].status !== 'Shortlisted') {
-                applications[idx].status = 'Shortlisted';
-                saveApplications();
-                renderApplications();
-                updateStats();
-                showToast('Shortlisted!', '#28a745');
-              }
-            };
-            if (rejectBtn) rejectBtn.onclick = () => {
-              if(applications[idx].status !== 'Rejected') {
-                applications[idx].status = 'Rejected';
-                saveApplications();
-                renderApplications();
-                updateStats();
-                showToast('Rejected!', '#dc3545');
-              }
-            };
-            if (removeBtn) removeBtn.onclick = () => {
-              if(confirm('Remove this application?')) {
-                applications.splice(idx, 1);
-                saveApplications();
-                renderApplications();
-                updateStats();
-                showToast('Application removed', '#6c757d');
-              }
-            };
-            if (interviewBtn) interviewBtn.onclick = () => scheduleInterview(idx);
-            // Notes
-            const noteArea = div.querySelector('textarea');
-            noteArea.onchange = () => setNotes(idx, noteArea.value);
-            // Rating
-            const ratingSpan = div.querySelector(`#rating-${idx}`);
-            ratingSpan.onclick = (e) => {
-              const x = e.offsetX;
-              const width = ratingSpan.offsetWidth;
-              const stars = Math.ceil((x / width) * 5);
-              setRating(idx, stars);
-              renderApplications();
-            };
-            list.appendChild(div);
-          });
-        }
 
-        // Advanced: Dynamic application management
-        const initialApplications = [
-          {
-            name: "Applicant Name 1",
-            email: "applicant1@example.com",
-            resume: "#",
-            status: "Pending"
-          },
-          {
-            name: "Applicant Name 2",
-            email: "applicant2@example.com",
-            resume: "#",
-            status: "Pending"
-          },
-          {
-            name: "Applicant Name 3",
-            email: "applicant3@example.com",
-            resume: "#",
-            status: "Pending"
-          },
-          {
-            name: "Applicant Name 4",
-            email: "applicant4@example.com",
-            resume: "#",
-            status: "Pending"
-          },
-          {
-            name: "Applicant Name 5",
-            email: "applicant5@example.com",
-            resume: "#",
-            status: "Pending"
+          fetch(`/api/recruiter/applications?search=${search}&status=${status}`)
+              .then(res => res.json())
+              .then(applications => {
+                  const list = document.getElementById('applications-list');
+                  list.innerHTML = '';
+                  applications.forEach(app => {
+                      const div = document.createElement('div');
+                      div.className = 'application';
+                      div.style.border = '2px solid #007bff';
+                      div.style.margin = '1rem 0';
+                      div.style.padding = '1rem';
+                      div.innerHTML = `
+                          <strong>${app.name}</strong><br>
+                          <span>Email: ${app.email}</span><br>
+                          <span>Resume: <a href="${app.resume}" target="_blank">Download</a></span><br>
+                          <span>Status: <b>${app.status}</b></span><br>
+                          <button class="button shortlist">Shortlist</button>
+                          <button class="button reject">Reject</button>
+                          <button class="button remove">Remove</button>
+                      `;
+                      div.querySelector('.shortlist').onclick = () => updateStatus(app.id, 'Shortlisted');
+                      div.querySelector('.reject').onclick = () => updateStatus(app.id, 'Rejected');
+                      div.querySelector('.remove').onclick = () => deleteApplication(app.id);
+                      list.appendChild(div);
+                  });
+              });
+      }
+
+      function updateStatus(appId, status) {
+          fetch(`/api/recruiter/applications/${appId}/status`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status })
+          })
+              .then(() => {
+                  renderApplications();
+                  showToast(`Application ${status}`, status === 'Shortlisted' ? '#28a745' : '#dc3545');
+              });
+      }
+
+      function deleteApplication(appId) {
+          if (confirm('Remove this application?')) {
+              fetch(`/api/recruiter/applications/${appId}`, { method: 'DELETE' })
+                  .then(() => {
+                      renderApplications();
+                      showToast('Application Removed', '#6c757d');
+                  });
           }
-        ];
-        let applications = JSON.parse(localStorage.getItem('recruiterApplications')) || initialApplications;
+      }
 
-        function saveApplications() {
-          localStorage.setItem('recruiterApplications', JSON.stringify(applications));
-        }
+      // Export to CSV
+      document.getElementById('exportCsvBtn').onclick = () => {
+          window.location.href = '/api/recruiter/applications/export';
+      };
 
-        function updateStats() {
-          document.querySelector('.stat:nth-child(1) p').textContent = applications.length;
-          document.querySelector('.stat:nth-child(2) p').textContent = applications.filter(a => a.status === 'Shortlisted').length;
-          document.querySelector('.stat:nth-child(3) p').textContent = applications.filter(a => a.status === 'Rejected').length;
-        }
+      // Filters
+      document.getElementById('search-applicant').oninput = renderApplications;
+      document.getElementById('filter-status').onchange = renderApplications;
 
-        // Logout button functionality
-        document.getElementById('logoutBtn').onclick = function() {
-            if(confirm('Are you sure you want to log out?')) {
-                localStorage.removeItem('recruiterApplications');
-                localStorage.removeItem('recruiterJobs');
-                localStorage.removeItem('recruiterTheme');
-                window.location.href = 'Recuirterlogin.html';
-            }
-        };
+      // Logout
+      document.getElementById('logoutBtn').onclick = function () {
+          if (confirm('Are you sure you want to log out?')) {
+              window.location.href = 'RecruiterLogin.html';
+          }
+      };
 
-        // Initial render
-        renderApplications();
-        updateStats();
-    </script>
+renderApplications();
+</script>
+
 </body>
 </html>

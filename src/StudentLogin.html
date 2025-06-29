@@ -125,6 +125,7 @@ body {
         if (response.ok && result === "Login successful") {
             messageBox.style.color = "green";
             messageBox.textContent = "Login successful!";
+            localStorage.setItem('loggedInStudentId', studentId);
             window.location.href = "studentdashboard.html";
         } else {
             messageBox.style.color = "red";
