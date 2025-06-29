@@ -1,33 +1,42 @@
 package com.example.Zproject.dto;
 
-//import lombok.Data;
-//
-//@Data
 public class JobApplicationRequest {
+    
     private String studentId;
     private String jobTitle;
     private String companyName;
-	public String getStudentId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public String getJobTitle() {
-		return jobTitle;
-	}
-	public void setJobTitle(String jobTitle) {
-		this.jobTitle = jobTitle;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-	public void setStudentId(String studentId) {
-		this.studentId = studentId;
-	}
-	
-	
-	
-	
+
+    public JobApplicationRequest() {
+        // Default constructor
+    }
+
+    public JobApplicationRequest(String studentId, String jobTitle, String companyName) {
+        this.studentId = studentId;
+        this.jobTitle = jobTitle;
+        this.companyName = companyName;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 }

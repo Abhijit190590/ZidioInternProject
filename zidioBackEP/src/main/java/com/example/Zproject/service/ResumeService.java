@@ -24,4 +24,9 @@ public class ResumeService {
     public Resume getResume(String studentId) {
         return resumeRepository.findByStudentId(studentId);
     }
+
+	public void deleteResume(String studentId) {
+		// TODO Auto-generated method stub
+		
+	}
 }
