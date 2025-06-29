@@ -24,4 +24,10 @@ public class ResumeController {
     public Resume getResume(@PathVariable String studentId) {
         return resumeService.getResume(studentId);
     }
+    
+    @DeleteMapping("/{studentId}")
+    public void deleteResume(@PathVariable String studentId) {
+        resumeService.deleteResume(studentId);
+    }
+
 }
