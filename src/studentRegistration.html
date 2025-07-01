@@ -225,88 +225,97 @@
   </section>
   <script>
     const form = document.getElementById('regForm');
-const password = document.getElementById('password');
-const confirmPassword = document.getElementById('confirm-password');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
 
-form.addEventListener('submit', async function(event) {
-  event.preventDefault();
+    function isStrongPassword(pwd) {
+      // At least 8 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character
+      const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      return strongPasswordPattern.test(pwd);
+    }
 
-  if (password.value !== confirmPassword.value) {
-    alert('Passwords do not match!');
-    confirmPassword.focus();
-    return;
-  }
+    form.addEventListener('submit', async function(event) {
+      event.preventDefault();
 
-  const phone = document.getElementById('phone');
-  const phonePattern = /^\+?\d{0,15}$/;
-  if (!phonePattern.test(phone.value)) {
-    alert('Please enter a valid phone number.');
-    phone.focus();
-    return;
-  }
+      if (password.value !== confirmPassword.value) {
+        alert('Passwords do not match!');
+        confirmPassword.focus();
+        return;
+      }
 
-  const dob = document.getElementById('dob');
-  const today = new Date();
-  const dobDate = new Date(dob.value);
-  if (dobDate > today) {
-    alert('Date of birth cannot be in the future.');
-    dob.focus();
-    return;
-  }
+      if (!isStrongPassword(password.value)) {
+        alert('Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.');
+        password.focus();
+        return;
+      }
 
-  // Get gender
-  const gender = document.querySelector('input[name="gender"]:checked');
-  if (!gender) {
-    alert('Please select your gender.');
-    return;
-  }
+      const phone = document.getElementById('phone');
+      const phonePattern = /^\+?\d{0,15}$/;
+      if (!phonePattern.test(phone.value)) {
+        alert('Please enter a valid phone number.');
+        phone.focus();
+        return;
+      }
 
-  const studentData = {
-    studentId: form.email.value.trim(), // Assuming studentId = email, change if needed
-    firstName: form.firstname.value.trim(),
-    lastName: form.lastname.value.trim(),
-    email: form.email.value.trim(),
-    password: form.password.value.trim(),
-    dob: form.dob.value.trim(),
-    gender: gender.value,
-    course: form.course.value.trim(),
-    phone: form.phone.value.trim(),
-    address: form.address.value.trim(),
-    linkedin: form.linkedin.value.trim(),
-    skills: form.skills.value.trim(),
-    about: form.about.value.trim()
-  };
+      const dob = document.getElementById('dob');
+      const today = new Date();
+      const dobDate = new Date(dob.value);
+      if (dobDate > today) {
+        alert('Date of birth cannot be in the future.');
+        dob.focus();
+        return;
+      }
 
-  try {
-    const response = await fetch('http://localhost:8081/api/student/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(studentData)
+      const gender = document.querySelector('input[name="gender"]:checked');
+      if (!gender) {
+        alert('Please select your gender.');
+        return;
+      }
+
+      const studentData = {
+        studentId: form.email.value.trim(), // Assuming studentId = email, change if needed
+        firstName: form.firstname.value.trim(),
+        lastName: form.lastname.value.trim(),
+        email: form.email.value.trim(),
+        password: form.password.value.trim(),
+        dob: form.dob.value.trim(),
+        gender: gender.value,
+        course: form.course.value.trim(),
+        phone: form.phone.value.trim(),
+        address: form.address.value.trim(),
+        linkedin: form.linkedin.value.trim(),
+        skills: form.skills.value.trim(),
+        about: form.about.value.trim()
+      };
+
+      try {
+        const response = await fetch('http://localhost:8081/api/student/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(studentData)
+        });
+
+        const result = await response.text();
+
+        if (response.ok) {
+          alert(result);
+          form.reset();
+          document.getElementById('success-msg').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('success-msg').style.display = 'none';
+            window.location.href = 'StudentLogin.html';
+          }, 1200);
+        } else {
+          alert('Error: ' + result);
+        }
+      } catch (error) {
+        alert('Network error: ' + error.message);
+      }
     });
 
-    const result = await response.text();
-
-    if (response.ok) {
-      alert(result);
-      form.reset();
-      document.getElementById('success-msg').style.display = 'block';
-      setTimeout(() => {
-        document.getElementById('success-msg').style.display = 'none';
-        window.location.href = 'StudentLogin.html';
-      }, 1200);
-    } else {
-      alert('Error: ' + result);
-    }
-  } catch (error) {
-    alert('Network error: ' + error.message);
-  }
-});
-
-confirmPassword.addEventListener('input', function() {
-  confirmPassword.style.borderColor = (confirmPassword.value !== password.value) ? 'red' : '#cbd5e1';
-});
-
-
+    confirmPassword.addEventListener('input', function() {
+      confirmPassword.style.borderColor = (confirmPassword.value !== password.value) ? 'red' : '#cbd5e1';
+    });
   </script>
 </body>
 </html>

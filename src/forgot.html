@@ -84,42 +84,73 @@
 </div>
 
 <script>
-    function resetPassword() {
-    const email = document.getElementById('email').value.trim();
-    const newPassword = document.getElementById('newPassword').value.trim();
-    const confirmPassword = document.getElementById('confirmPassword').value.trim();
-    const messageBox = document.getElementById('messageBox');
+  function isStrongPassword(password) {
+    // At least 8 characters, 1 uppercase, 1 lowercase, 1 digit, 1 special character
+    const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return strongPasswordPattern.test(password);
+  }
 
-    // Simple email format check
-    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+  async function resetPassword() {
+    const email = document.getElementById("email").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const messageBox = document.getElementById("messageBox");
 
-    if (!email || !emailPattern.test(email)) {
-      messageBox.style.color = 'red';
-      messageBox.textContent = 'Please enter a valid email address.';
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      messageBox.style.color = 'red';
-      messageBox.textContent = 'Password must be at least 6 characters.';
+    if (!email || !newPassword || !confirmPassword) {
+      messageBox.textContent = "Please fill in all fields.";
+      messageBox.style.color = "red";
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      messageBox.style.color = 'red';
-      messageBox.textContent = 'Passwords do not match.';
+      messageBox.textContent = "Passwords do not match.";
+      messageBox.style.color = "red";
       return;
     }
 
-    // Simulated password reset
-    messageBox.style.color = 'green';
-    messageBox.textContent = 'Your password has been reset successfully!';
+    if (!isStrongPassword(newPassword)) {
+      messageBox.textContent = "Password must be at least 8 characters, with uppercase, lowercase, number, and special character.";
+      messageBox.style.color = "red";
+      return;
+    }
 
-    setTimeout(() => {
-      window.location.href ='StudentLogin.html';
-    },2000);
+    messageBox.textContent = "Processing...";
+    messageBox.style.color = "blue";
+
+    try {
+      const response = await fetch("http://localhost:8081/api/student/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          newPassword: newPassword
+        })
+      });
+
+      const result = await response.text();
+
+      if (response.ok) {
+        messageBox.textContent = result || "Password reset successful!";
+        messageBox.style.color = "green";
+
+        setTimeout(() => {
+          window.location.href = "StudentLogin.html";
+        }, 2000);
+
+      } else {
+        messageBox.textContent = result || "Failed to reset password.";
+        messageBox.style.color = "red";
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      messageBox.textContent = "An error occurred. Please try again later.";
+      messageBox.style.color = "red";
+    }
   }
 </script>
+
 
 </body>
 </html>

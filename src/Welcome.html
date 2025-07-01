@@ -572,17 +572,24 @@
         </div>
       </div>
       <!-- Contact Form -->
-      <form style="margin-top:2.5rem;max-width:500px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;gap:1.1rem;">
+      <form id="contactForm" style="margin-top:2.5rem; max-width:500px; margin-left:auto; margin-right:auto; display:flex; flex-direction:column; gap:1.1rem;">
         <label for="contact-name" style="font-weight:600;color:#333;">Name <span style="color:#dc3545;font-weight:bold;">*</span></label>
-        <input type="text" id="contact-name" name="contact-name" required placeholder="Your Name" style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;">
+        <input type="text" id="contact-name" name="contact-name" required placeholder="Your Name" style="padding:0.7rem 1rem; border-radius:7px; border:1.5px solid #4facfe; font-size:1rem;">
+        
         <label for="contact-email" style="font-weight:600;color:#333;">Email <span style="color:#dc3545;font-weight:bold;">*</span></label>
-        <input type="email" id="contact-email" name="contact-email" required placeholder="you@example.com" style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;">
+        <input type="email" id="contact-email" name="contact-email" required placeholder="you@example.com" style="padding:0.7rem 1rem; border-radius:7px; border:1.5px solid #4facfe; font-size:1rem;">
+        
         <label for="contact-phone" style="font-weight:600;color:#333;">Phone (optional)</label>
-        <input type="tel" id="contact-phone" name="contact-phone" placeholder="+1 555 123 4567" style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;">
+        <input type="tel" id="contact-phone" name="contact-phone" placeholder="+1 555 123 4567" style="padding:0.7rem 1rem; border-radius:7px; border:1.5px solid #4facfe; font-size:1rem;">
+        
         <label for="contact-message" style="font-weight:600;color:#333;">Message <span style="color:#dc3545;font-weight:bold;">*</span></label>
-        <textarea id="contact-message" name="contact-message" required placeholder="Type your message here..." style="padding:0.7rem 1rem;border-radius:7px;border:1.5px solid #4facfe;font-size:1rem;min-height:80px;"></textarea>
-        <button type="submit" style="margin-top:0.5rem;background:#ff6b6b;color:#fff;font-weight:700;font-size:1.1rem;padding:0.8rem 0;border-radius:9px;border:none;cursor:pointer;transition:background 0.3s;">Send Message</button>
+        <textarea id="contact-message" name="contact-message" required placeholder="Type your message here..." style="padding:0.7rem 1rem; border-radius:7px; border:1.5px solid #4facfe; font-size:1rem; min-height:80px;"></textarea>
+        
+        <button type="submit" style="margin-top:0.5rem; background:#ff6b6b; color:#fff; font-weight:700; font-size:1.1rem; padding:0.8rem 0; border-radius:9px; border:none; cursor:pointer; transition:background 0.3s;">Send Message</button>
+        
+        <div id="statusMessage" style="margin-top: 1rem; text-align: center; display: none;"></div>
       </form>
+
     </section>
   </main>
   
@@ -594,63 +601,56 @@
       <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:#4facfe;text-decoration:underline;">Back to Top</a>
     </div>
   </footer>
-
   <script>
-    // Close the dropdown when clicking outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.btn')) {
-        const dropdowns = document.getElementsByClassName("dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-          const openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
+    const contactForm = document.getElementById("contactForm");
+    const statusMessage = document.getElementById("statusMessage");
 
-    // Toggle dropdown visibility
-    function toggleDropdown(id) {
-      // No longer needed for hover-based dropdowns, but kept for accessibility (keyboard)
-      const dropdowns = document.getElementsByClassName("dropdown-content");
-      for (let i = 0; i < dropdowns.length; i++) {
-        const openDropdown = dropdowns[i];
-        if (openDropdown.id !== id && openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
+    contactForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = {
+        name: document.getElementById("contact-name").value,
+        email: document.getElementById("contact-email").value,
+        phone: document.getElementById("contact-phone").value,
+        message: document.getElementById("contact-message").value
+      };
+
+      const loadingIndicator = document.createElement("div");
+      loadingIndicator.textContent = "Sending...";
+      loadingIndicator.style.color = "blue";
+      statusMessage.innerHTML = "";
+      statusMessage.appendChild(loadingIndicator);
+      statusMessage.style.display = "block";
+
+      try {
+        const response = await fetch("http://localhost:8081/api/contact/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        });
+
+        // Remove loading indicator
+        statusMessage.removeChild(loadingIndicator);
+
+        if (!response.ok) {
+          throw new Error(await response.text());
         }
-      }
-      document.getElementById(id).classList.toggle("show");
-    }
-    
-    // Create more floating bubbles dynamically
-    document.addEventListener('DOMContentLoaded', function() {
-      const body = document.querySelector('body');
-      for (let i = 0; i < 8; i++) {
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        const size = Math.random() * 100 + 50;
-        const left = Math.random() * 100;
-        const top = Math.random() * 100;
-        const delay = Math.random() * 8;
-        bubble.style.width = size + 'px';
-        bubble.style.height = size + 'px';
-        bubble.style.left = left + '%';
-        bubble.style.top = top + '%';
-        bubble.style.animationDelay = delay + 's';
-        bubble.style.opacity = Math.random() * 0.3 + 0.1;
-        body.appendChild(bubble);
+
+        const result = await response.text();
+        statusMessage.textContent = result || "Message submitted successfully!";
+        statusMessage.style.color = "green";
+        contactForm.reset();
+
+      } catch (error) {
+        console.error("Error:", error);
+        statusMessage.textContent = error.message || "Failed to submit message. Please try again later.";
+        statusMessage.style.color = "red";
       }
     });
 
-    // Accessibility: allow closing dropdowns with Escape key
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        const dropdowns = document.getElementsByClassName("dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-          dropdowns[i].classList.remove('show');
-        }
-      }
-    });
   </script>
+  
 </body>
 </html>

@@ -157,12 +157,37 @@
   </div>
 
   <script>
-    document.getElementById("contactForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      alert("Your message has been sent. Thank you!");
-      this.reset();
-    });
-  </script>
+        // Gather form data
+        const formData = {
+          firstName: document.getElementById("first").value,
+          lastName: document.getElementById("last").value,
+          email: document.getElementById("email").value,
+          phone: document.getElementById("phone").value,
+          message: document.getElementById("message").value
+        };
+        // Send data to the backend
+        fetch("http://localhost:8081/api/contact/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok " + response.statusText);
+          }
+          return response.text();
+        })
+        .then(data => {
+          alert(data); // Show success message
+          this.reset(); // Reset the form
+        })
+        .catch(error => {
+          alert("There was a problem with your submission: " + error.message);
+        });
+</script>
+ 
 
 </body>
 </html>
