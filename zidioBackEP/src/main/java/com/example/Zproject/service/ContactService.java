@@ -17,7 +17,7 @@ public class ContactService {
         ContactMessage message = new ContactMessage();
         message.setName(request.getName());
         message.setEmail(request.getEmail());
-        message.setPhone(request.getName());
+        message.setPhone(request.getPhone());  // ✅ Corrected line
         message.setMessage(request.getMessage());
 
         contactRepository.save(message);
