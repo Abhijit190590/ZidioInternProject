@@ -3,6 +3,7 @@ package com.example.Zproject.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.Zproject.dto.PasswordResetRequest;
 import com.example.Zproject.dto.StudentLoginRequest;
 import com.example.Zproject.dto.StudentRegistrationRequest;
 import com.example.Zproject.model.Student;
@@ -47,5 +48,18 @@ public class StudentService {
         Optional<Student> student = studentRepository.findByStudentIdAndPassword(
                 request.getStudentId(), request.getPassword());
         return student.isPresent();
+    }
+
+    public boolean resetPassword(PasswordResetRequest request) {
+        Optional<Student> studentOpt = studentRepository.findByEmail(request.getEmail());
+
+        if (studentOpt.isPresent()) {
+            Student student = studentOpt.get();
+            student.setPassword(request.getNewPassword());
+            studentRepository.save(student);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

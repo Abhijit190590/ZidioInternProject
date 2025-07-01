@@ -1,30 +1,11 @@
 package com.example.Zproject.dto;
 
-
-//import lombok.Data;
-//
-//@Data
 public class ContactRequest {
     private String name;
     private String email;
     private String phone;
     private String message;
-//	public String getName() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//	public String getEmail() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//	
-//	public String getPhone() {
-//		return null;
-//	}
-//	public String getMessage() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+
 	public String getName() {
 		return name;
 	}
