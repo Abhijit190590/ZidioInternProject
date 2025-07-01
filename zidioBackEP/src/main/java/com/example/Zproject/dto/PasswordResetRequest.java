@@ -16,4 +16,5 @@ public class PasswordResetRequest {
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
+    
 }
